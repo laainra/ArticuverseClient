@@ -1,3 +1,5 @@
+
+
 .App {
   text-align: center;
 }
@@ -35,4 +37,104 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.social-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.circle-button {
+  display: flex;
+  justify-content: center; /* Horizontally center the content */
+  align-items: center; /* Vertically center the content */
+  width: 50px;
+  height: 50px;
+  margin: 20px;
+  background-color: #FFE9E9;
+  border-radius: 50%;
+  padding: 10px;
+}
+.circle-button i {
+  font-size: 40x; /* Adjust the font size as needed */
+}
+
+.divider-line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: #000; /* Adjust the color as needed */
+  margin: 0 10px; /* Adjust the margin to control the spacing */
+}
+
+.img-fluid {
+ margin: 0 50px 0 50px;
+}
+
+.custom-nav-link {
+  margin-right: 20px; /* Menambahkan jarak antara Nav.Item */
+}
+
+.custom-nav-link:hover,
+.custom-nav-link:active {
+  background-color: #FEE9E9; /* Mengubah warna latar belakang saat dihover atau aktif */
+}
+
+.section {
+  padding: 60px 0;
+}
+
+.image-container {
+  position: relative;
+}
+
+.main-image {
+  margin: 30px 0 0 0;
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+}
+
+.bubbles {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bubble {
+
+  width: 255.78px;
+  height: 242.283px;
+  transform: rotate(1.295deg);
+  flex-shrink: 0;
+  position: absolute;
+}
+
+.text-container {
+  padding: 20px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+
+.black {
+  color: black;
+}
+
+.points {
+  list-style: none;
+  padding-left: 0;
+}
+
+.red-check {
+  color: red;
+  margin-right: 10px;
 }
