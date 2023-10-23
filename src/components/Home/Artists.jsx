@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useInView } from 'react-intersection-observer';
 import { Button } from "../General/Button";
 
 export default function Artists() {
@@ -20,8 +21,10 @@ export default function Artists() {
     borderRadius: "15px",
     overflow: "hidden",
     display: "flex",
-    flexDirection: "column", 
+    flexDirection: "column",
     alignItems: "center",
+    transition: "opacity 0.5s ease",
+    opacity: 0, // Start with 0 opacity
   };
 
   const imageStyle = {
@@ -50,13 +53,18 @@ export default function Artists() {
     },
   ];
 
+  const [ref, inView] = useInView({
+    triggerOnce: true, 
+    threshold: 0.2,
+  });
+
   const buttonStyle = {
     margin: "20px",
   };
 
   return (
     <div id="artists">
-      <div className="text-center ">
+      <div className="text-center">
         <h2 className="black bold" style={{ marginRight: "10px" }}>
           {" "}
           Meet <span className="fw-bold red"> Great Artists</span>
@@ -68,7 +76,12 @@ export default function Artists() {
 
       <div style={cardContainerStyle}>
         {artists.map((artist, index) => (
-          <div className="card" style={cardStyle} key={index}>
+          <div
+            className="card"
+            style={{ ...cardStyle, opacity: inView ? 1 : 0 }}
+            key={index}
+            ref={ref}
+          >
             <img src={artist.image} alt={artist.name} style={imageStyle} />
             <h3>{artist.name}</h3>
             <p>{artist.desc}</p>

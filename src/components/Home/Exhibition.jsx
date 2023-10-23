@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "../../App.css";
+import { useInView } from "react-intersection-observer";
 
 export default function Exhibition() {
   const imageStyle = {
@@ -12,16 +13,22 @@ export default function Exhibition() {
     width: "100%",
   };
 
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.3, 
+  });
+
   return (
-    <section className="section justify-center ">
+    <section className={`section justify-center ${inView ? 'fade-in' : 'fade-out'}`}>
       <Container className="mt-10 md:mt-16">
         <Row>
-        <Col md={6} className="image-container sm:order-2">
+          <Col md={6} className="image-container sm:order-2">
             <img
               src="/image/show-gallery.gif"
               alt="Amazing Arts"
-              className="main-image"
+              className={`main-image ${inView ? 'fade-in' : 'fade-out'}`}
               style={imageStyle}
+              ref={ref}
             />
           </Col>
           <Col md={6} className="text-container md:order-2">
@@ -40,7 +47,7 @@ export default function Exhibition() {
               </h3>
             </div>
 
-            <div className="text-container ">
+            <div className={`text-container ${inView ? 'fade-in' : 'fade-out'}`}>
               <p>
                 Step into a world of wonder and exploration with our current
                 exhibition. Immerse yourself in the captivating narratives and
@@ -54,7 +61,6 @@ export default function Exhibition() {
               </p>
             </div>
           </Col>
-
         </Row>
       </Container>
     </section>

@@ -11,22 +11,76 @@ import Artists from "../components/Home/Artists";
 import Exhibition from "../components/Home/Exhibition";
 import Museum from "../components/Home/Museum";
 import Royalties from "../components/Home/royalties";
+import { motion } from "framer-motion";
 
 function Home() {
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
     <>
       <Navi id="navi" />
-      <Hero id="hero" />
-      <Arts id="explore" />
-      <Learn id="learn" />
-      <Artists id="artist" />
-      <Exhibition id="exhibition" />
-      <Royalties id="royalties" />
-      <Museum id="museum" />
+      <motion.div
+        id="hero"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Hero />
+      </motion.div>
+      <motion.div
+        id="explore"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Arts />
+      </motion.div>
+      <motion.div
+        id="learn"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Learn />
+      </motion.div>
+      <motion.div
+        id="artist"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Artists />
+      </motion.div>
+      <motion.div
+        id="exhibition"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Exhibition />
+      </motion.div>
+      <motion.div
+        id="royalties"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Royalties />
+      </motion.div>
+      <motion.div
+        id="museum"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInVariants}
+      >
+        <Museum />
+      </motion.div>
       <Footer id="footer" />
     </>
   );
 }
-
 
 export default withSplashScreen(Home);

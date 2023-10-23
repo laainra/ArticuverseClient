@@ -1,4 +1,5 @@
 import React from "react";
+import { useInView } from "react-intersection-observer";
 import { Button } from "../General/Button";
 
 function Arts() {
@@ -17,6 +18,8 @@ function Arts() {
     width: "400px",
     padding: "20px",
     backgroundColor: "#FFF5F5",
+    transition: "opacity 0.5s ease", // Add a CSS transition for opacity
+    opacity: 0, // Start with 0 opacity
   };
 
   const imageStyle = {
@@ -61,9 +64,14 @@ function Arts() {
     margin: "20px",
   };
 
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.2, // Adjust the threshold as needed
+  });
+
   return (
     <div id="explore-arts">
-      <div className="text-center ">
+      <div className="text-center">
         <h2 className="black bold" style={{ marginRight: "10px" }}>
           {" "}
           Explore <span className="fw-bold red"> Art Inspirations</span>
@@ -74,22 +82,20 @@ function Arts() {
       </div>
       <div style={cardContainerStyle}>
         {arts.slice(0, window.innerWidth >= 768 ? arts.length : 3).map((art, index) => (
-          <div className="card" style={cardStyle} key={index}>
+          <div
+            className="card"
+            style={{ ...cardStyle, opacity: inView ? 1 : 0 }} // Apply opacity based on inView
+            key={index}
+            ref={ref}
+          >
             <img src={art.image} alt={art.title} style={imageStyle} />
             <h3>{art.title}</h3>
             <p>By {art.author}</p>
           </div>
         ))}
 
-        <div
-          style={{ textAlign: "center", margin: "20px 0 0 0" }}
-          className="center-button"
-        >
-          <Button
-            style={{ justifyContent: "center" }}
-            title="More Arts"
-            to="arts"
-          />
+        <div style={{ textAlign: "center", margin: "20px 0 0 0" }} className="center-button">
+          <Button style={{ justifyContent: "center" }} title="More Arts" to="arts" />
         </div>
       </div>
     </div>
