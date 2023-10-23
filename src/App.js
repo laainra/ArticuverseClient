@@ -23,9 +23,6 @@ function App() {
 
         <script src="https://cdn.tailwindcss.com"></script>
       </Helmet>
-
-      {/* Include your routes here */}
-      
     </>
   );
 }

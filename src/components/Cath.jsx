@@ -1,9 +1,9 @@
 import React from "react";
 
-function Cath({data}) {
+function Cath({ data }) {
   return (
     <div
-      className="bg-cover bg-center w-80 h-20 m-2 mx-5 relative rounded-lg border-1 backdrop-brightness-75"
+      className="bg-cover bg-center w-80 h-20 m-2 mx-1 sm:mx-5 relative rounded-lg border-1 backdrop-brightness-75"
       style={{
         backgroundImage: `url(${data.image})`,
       }}

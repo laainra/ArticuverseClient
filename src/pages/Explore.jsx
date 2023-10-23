@@ -138,7 +138,7 @@ const Explore = () => {
 
       <h1 className="text-3xl mt-8 text-center">Top Genre</h1>
 
-      <div className="grid grid-cols-1 gap-2 mt-4 md:grid-cols-3 sm:grid-cols-1">
+      <div className="grid grid-cols-1 gap-2 mt-4 md:grid-cols-3 sm:grid-cols-1 mr-3">
         {genreData.map((genre, index) => (
           <Cath key={index} data={genre} />
           
