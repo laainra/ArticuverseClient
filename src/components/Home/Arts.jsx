@@ -1,8 +1,10 @@
-import React from "react";
+
+import React, { useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { Button } from "../General/Button";
 
 function Arts() {
+  const [visibleItems, setVisibleItems] = useState(0);
   const cardContainerStyle = {
     display: "flex",
     justifyContent: "center",
@@ -66,8 +68,15 @@ function Arts() {
 
   const [ref, inView] = useInView({
     triggerOnce: true,
-    threshold: 0.2, // Adjust the threshold as needed
+    threshold: 0.2,
   });
+
+  useEffect(() => {
+    if (inView) {
+      setVisibleItems(arts.length);
+    }
+  }, [inView, arts.length]);
+
 
   return (
     <div id="explore-arts">
@@ -93,11 +102,12 @@ function Arts() {
             <p>By {art.author}</p>
           </div>
         ))}
-
-        <div style={{ textAlign: "center", margin: "20px 0 0 0" }} className="center-button">
-          <Button style={{ justifyContent: "center" }} title="More Arts" to="arts" />
-        </div>
+      <div style={{ textAlign: "center", margin: "20px 0 0 0" }} className="center-button col-span-1">
+        <Button title="More Arts" to="explore" />
       </div>
+      </div>
+      
+
     </div>
   );
 }

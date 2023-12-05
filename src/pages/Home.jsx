@@ -76,7 +76,6 @@ function Home() {
         animate="visible"
         variants={fadeInVariants}
       >
-        <Museum />
       </motion.div>
       <Footer id="footer" />
     </>

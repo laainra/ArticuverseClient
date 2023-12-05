@@ -1,93 +1,112 @@
-import React from 'react';
-import Navi from '../components/General/Navbar';
-import SearchBar from '../components/SearchBar';
-import ExhibiitonCard from '../components/ExhibitiionCard';
-import Footer from '../components//General/Footer';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Navi from "../components/General/Navbar";
+import SearchBar from "../components/SearchBar";
+import ExhibiitonCard from "../components/ExhibitiionCard";
+import Footer from "../components//General/Footer";
 
+export default function Exhibition() {
+  const [exhibitionData, setExhibitionData] = useState([]);
 
-export default function Exhibition(){
+  const currentDate = new Date();
 
-    const currentExh = [
-        {
-          title: "Abstract Artist Exhibition",
-          location: "Madiun",
-          date: "10/22/2023",
-          img: "image/art4.jpg",
-          to: "/link-to-artwork-1",
-        },
-        {
-          title: "Realism Exhibition",
-          location: "Jakarta",
-          date: "11/15/2023",
-          img: "image/art5.jpg",
-          to: "/link-to-artwork-2",
-        },
-        {
-          title: "SUPER Art Exhibition",
-          location: "Surabaya",
-          date: "12/03/2023",
-          img: "image/art6.jpg",
-          to: "/link-to-artwork-3",
-        },
-      ];
-      
-      const pastExh = [
-        {
-          title: "Abstract Artist Exhibition",
-          location: "Jakarta",
-          date: "07/08/2022",
-          img: "image/art7.jpg",
-          to: "/link-to-artwork-1",
-        },
-        {
-          title: "Your ART Exhibition",
-          location: "Magetan",
-          date: "06/21/2022",
-          img: "image/art8.jpg",
-          to: "/link-to-artwork-2",
-        },
-        {
-          title: "We Art",
-          location: "Madiun",
-          date: "11/12/2022",
-          img: "image/art9.jpg",
-          to: "/link-to-artwork-3",
-        },
-      ];
-      
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split("-");
+    return new Date(year, month - 1, day); // Month is 0-indexed in JavaScript dates
+  };
+  
+  const PastExhibitions = ({ exhibitionData }) => {
+    return exhibitionData.filter((exh) => formatDate(exh.end_date) < currentDate);
+  };
+  
+  const CurrentExhibitions = ({ exhibitionData }) => {
+    return exhibitionData.filter(
+      (exh) => formatDate(exh.start_date) <= currentDate && formatDate(exh.end_date) >= currentDate
+    );
+  };
+  
+  const UpcomingExhibitions = ({ exhibitionData }) => {
+    return exhibitionData.filter((exh) => formatDate(exh.start_date) > currentDate);
+  };
 
-      return (
-        <div className="mt-20 min-h-screen px-2 flex flex-col items-center">
-          <Navi />
-          
-          <div className="md:max-w-xl w-full p-3">
-            <SearchBar />
+  const fetchExhibitionData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/exhibition");
+      if (Array.isArray(response.data.data)) {
+        setExhibitionData(response.data.data);
+        console.log(response.data.data);
+      } else {
+        console.error("Response data is not an array:", response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExhibitionData();
+  }, []);
+
+  return (
+    <div className="mt-20 min-h-screen px-2 flex flex-col items-center">
+      <Navi />
+
+      <div className="md:max-w-xl w-full p-3">
+        <SearchBar />
+      </div>
+
+      <h1 className="text-3xl mt-8">Current Exhibition</h1>
+
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        {CurrentExhibitions({ exhibitionData }).map((exh, index) => (
+          <div key={exh.id} className="w-full">
+            <ExhibiitonCard
+              title={exh.name}
+              location={exh.location}
+              date={`${exh.start_date}-${exh.end_date}`}
+              desc={exh.description}
+              img={exh.poster}
+              to={exh.to}
+            />
           </div>
-          
-    
+        ))}
+      </div>
 
-          <h1 className="text-3xl mt-8">Upcomming Exhibition</h1>
-          
-          <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-  {currentExh.map((exh, index) => (
-    <div key={index}  className="w-full ">
-      <ExhibiitonCard  title={exh.title} location={exh.location} date={exh.date} img={exh.img} to={exh.to} />
+      <h1 className="text-3xl mt-8">Upcoming Exhibition</h1>
+
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        {UpcomingExhibitions({ exhibitionData }).map((exh, index) => (
+          <div key={exh.id} className="w-full">
+            <ExhibiitonCard
+              title={exh.name}
+              location={exh.location}
+              date={`${exh.start_date}-${exh.end_date}`}
+              desc={exh.description}
+              img={exh.poster}
+              to={exh.to}
+            />
+          </div>
+        ))}
+      </div>
+
+      <h1 className="text-3xl mt-8">Past Exhibition</h1>
+
+<div className="my-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+  {PastExhibitions({ exhibitionData }).map((exh, index) => (
+    <div key={exh.id} className="w-full">
+      <ExhibiitonCard
+        title={exh.name}
+        location={exh.location}
+        date={`${exh.start_date}-${exh.end_date}`}
+        desc={exh.description}
+        img={exh.poster}
+        to={exh.to}
+      />
     </div>
   ))}
 </div>
-          <h1 className="text-3xl mt-8">Past Exhibition</h1>
-          
-          <div className="my-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-  {pastExh.map((exh, index) => (
-    <div key={index}  className="w-full ">
-      <ExhibiitonCard  title={exh.title} location={exh.location} date={exh.date} img={exh.img} to={exh.to} />
+
+      <Footer />
     </div>
-  ))}
-</div>
-
-
-          <Footer/>
-          </div>
-          
-          )
+  );
 }

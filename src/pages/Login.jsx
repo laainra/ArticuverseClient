@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MDBContainer,
   MDBCol,
@@ -22,10 +22,15 @@ import {
   faGithub,
 } from "@fortawesome/free-brands-svg-icons";
 import { Button, LongButton } from "../components/General/Button.jsx";
+import {handleLogin} from "../Auth/AuthHelper.js";
 
 import "../App.css";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+
   return (
     <>
       <Navi />
@@ -57,7 +62,10 @@ function Login() {
         `}
       </style>
 
-      <MDBContainer fluid className="p-3 h-custom d-flex align-items-center justify-content-center mt-5">
+      <MDBContainer
+        fluid
+        className="p-3 h-custom d-flex align-items-center justify-content-center mt-5"
+      >
         <MDBRow>
           <MDBCol col="4" md="4" className="order-2 order-md-1 mt-5">
             <div className="d-flex flex-row align-items-center justify-content-center">
@@ -67,8 +75,9 @@ function Login() {
             <div className="d-flex flex-row align-items-center justify-content-center">
               <div className="social-buttons">
                 <div className="circle-button">
-                  <a><FontAwesomeIcon icon={faFacebookF} /></a>
-                  
+                  <a>
+                    <FontAwesomeIcon icon={faFacebookF} />
+                  </a>
                 </div>
 
                 <div className="circle-button">
@@ -79,8 +88,10 @@ function Login() {
                 </div>
 
                 <div className="circle-button">
-                  <a> <FontAwesomeIcon icon={faGithub} /></a>
-                 
+                  <a>
+                    {" "}
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
                 </div>
               </div>
             </div>
@@ -90,29 +101,24 @@ function Login() {
               <p className="text-center fw-bold mx-3 mb-0">Or</p>
               <div className="divider-line"></div>
             </div>
-
             <MDBInput
               wrapperClass="mb-4"
-              label={
-                <span>
-                  <i className="fa fa-envelope mr-2"></i> Email address
-                </span>
-              }
-              id="formControlLg"
+              label="Email address"
+              id="email"
               type="email"
               size="lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <MDBInput
               wrapperClass="mb-4"
-              label={
-                <span>
-                  <i className="fa fa-lock mr-2"></i> Password
-                </span>
-              }
-              id="formControlLg"
+              label="Password"
+              id="password"
               type="password"
               size="lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
 
             <div className="d-flex justify-content-between mb-4">
@@ -125,8 +131,13 @@ function Login() {
               <a href="!#">Forgot password?</a>
             </div>
 
-            <div className="flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">
-              <LongButton className="mb-2 mb-md-0 px-5 " size="lg" title="Login" />
+            <div className="ml-5 flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">
+              <LongButton
+                className="mb-2 mb-md-0 px-5 "
+                size="lg"
+                title="Login"
+                onClick={() => handleLogin(email, password)}
+              />
 
               <p className="small fw-bold mt-2 pt-1 mb-2">
                 Don't have an account?{" "}
@@ -136,7 +147,11 @@ function Login() {
               </p>
             </div>
           </MDBCol>
-          <MDBCol col="10" md="6" className="order-1 order-md-2 d-flex  mt-5 md:ml-32">
+          <MDBCol
+            col="10"
+            md="6"
+            className="order-1 order-md-2 d-flex  mt-5 md:ml-32"
+          >
             <img
               src="./image/login.png"
               className="mr-auto w-full"

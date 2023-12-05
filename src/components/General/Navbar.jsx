@@ -3,8 +3,12 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { MiniButton } from "./Button";
 import styled from "styled-components";
+import { useAuth0 } from "@auth0/auth0-react";
+import AvatarDropdown from "../AvatarDropdown";
+import { FaPlus } from "react-icons/fa";
 
 function Navi() {
+  const { isAuthenticated } = useAuth0();
   const NavLinkStyle = styled(Link)`
     margin: 0 0.5rem;
     text-decoration: none;
@@ -61,11 +65,11 @@ function Navi() {
               </Navbar.Brand>
             </div>
             <div className="flex justify-end">
-            <Navbar.Toggle
+              <Navbar.Toggle
                 className="ml-24"
                 aria-controls="basic-navbar-nav"
                 onClick={() => setExpanded(!expanded)}
-                style={{  right: 0 }}
+                style={{ right: 0 }}
               >
                 <span style={{ color: "black" }}>&#9776;</span>
               </Navbar.Toggle>
@@ -74,7 +78,7 @@ function Navi() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto lg:ml-32">
               <NavLinkStyle
-                to={getNavLinkHref("home")}
+                to={getNavLinkHref("")}
                 className={`mx-5 ${
                   location.pathname === "/" || location.pathname === "/home"
                     ? "active"
@@ -107,8 +111,29 @@ function Navi() {
               >
                 Exhibition
               </NavLinkStyle>
+              <NavLinkStyle
+              // to={getNavLinkHref("exhibition")}
+              // className={`mx-5 ${
+              //   location.pathname === "/exhibition" ? "active" : ""
+              // }`}
+              ></NavLinkStyle>
             </Nav>
-            <MiniButton title={getMiniButtonTitle()} to={getMiniButtonTo()} />
+
+            {location.pathname === "/profile" && (
+              <div className="flex items-center h-12 mt-2">
+                <div className="w-12 h-12 items-center">
+                <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
+                  <a href="/edit-profile"><FaPlus className="text-white text-2xl p-1" /></a>
+                </div>
+                </div>
+
+                <AvatarDropdown />
+              </div>
+            )}
+
+            {location.pathname !== "/profile" && (
+              <MiniButton title={getMiniButtonTitle()} to={getMiniButtonTo()} />
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

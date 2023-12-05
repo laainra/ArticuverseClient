@@ -30,22 +30,31 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
-    try {
-      const response = await axios.post("http://localhost:8080/api/register", {
-        name,
-        username,
-        email,
-        password,
-      }, {withCredentials: true,});
 
-      // Handle a successful response here, e.g., redirect or show a success message
-      console.log("Registration successful:", response.data);
-    } catch (error) {
-      // Handle errors, e.g., display an error message
-      console.error("Registration error:", error);
+    if (name === "" || username === "" || email === ""|| password === "") {
+      alert("Failed to Register,fill all the form ");
+    } else {
+      try {
+        const response = await axios.post("http://localhost:8080/api/register", {
+          name,
+          username,
+          email,
+          password,
+        });
+
+        if (response.status === 200) {
+          alert("Register Successful");
+          window.location.replace('http://localhost:3000/');
+        } else {
+          alert("Failed to register");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("An error occurred while submitting data");
+      }
     }
   };
 
@@ -187,7 +196,7 @@ function Register() {
               <a href="!#">Forgot password?</a>
             </div>
 
-            <div className=" flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">
+            <div className=" ml-5 flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">
               <LongButton title="Register" onClick={handleFormSubmit} className="mb-2 mb-md-0 px-5 mx- " size="lg"/>
 
               <p className="small fw-bold mt-2 pt-1 mb-2">

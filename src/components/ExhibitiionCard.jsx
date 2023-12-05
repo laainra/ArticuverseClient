@@ -4,13 +4,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import { MiniButton } from './General/Button';
 
-const ExhibitionCard = ({ title, location, date, img, to }) => {
+const ExhibitionCard = ({ title, location, date, desc, img, to }) => {
   return (
     <Card>
       <CardMedia
         component="img"
         height="278"
-        image={img}
+        image={`/image/${img}`} 
         alt="Exhibition Image"
         sx={{ objectFit: 'cover', height: '278px' }}
       />
@@ -26,6 +26,12 @@ const ExhibitionCard = ({ title, location, date, img, to }) => {
           <DateRangeIcon sx={{ fontSize: 20 }} />
           <Typography variant="body2">
             Date: {date}
+          </Typography>
+        </Box>
+        <Box display="flex" alignItems="center" mt={1}>
+          <DateRangeIcon sx={{ fontSize: 20 }} />
+          <Typography variant="body2">
+            Description: {desc}
           </Typography>
         </Box>
         <Box mt={1}>

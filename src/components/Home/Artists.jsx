@@ -9,7 +9,7 @@ export default function Artists() {
     alignItems: "center",
     flexWrap: "wrap",
     textAlign: "center",
-    margin: "0 30px 50px 0",
+    margin: "0 30px 0 0",
   };
 
   const cardStyle = {
