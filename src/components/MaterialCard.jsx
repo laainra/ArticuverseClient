@@ -20,7 +20,7 @@ const MaterialCard = ({ title, desc, img, to }) => {
           {desc}
         </Typography>
         <Box mt={2} display="flex" justifyContent="center">
-          <MiniButton to={to} title="More" />
+          <MiniButton to={`/material/${to}`} title="Learn More" />
         </Box>
       </CardContent>
     </Card>

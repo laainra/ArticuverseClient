@@ -110,74 +110,7 @@ export default function EditProfile() {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
-      {/* <Container className="mt-4"> */}
-      {/* <Row> */}
-      {/* Left Column */}
-      {/* <Col md={4}>
-            <div className="text-center">
-              <img
-                src="/path-to-your-avatar-image.jpg"
-                alt="Avatar"
-                className="w-32 h-32 rounded-circle"
-              />
-            </div>
-            <Form.Group className="mt-3">
-              <Form.File
-                id="avatarFile"
-                label="Upload Avatar"
-                custom
-                className="text-white bg-red-600 rounded"
-              />
-            </Form.Group>
-          </Col> */}
 
-      {/* Right Column */}
-      {/* <Col md={8}>
-            <Form>
-              <Form.Group controlId="formName">
-                <Form.Label className="text-red-600">
-                  Name<span className="text-red-600">*</span>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Add your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formUsername">
-                <Form.Label>Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Your Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  disabled
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formDescription">
-                <Form.Label className="text-red-600">
-                  Description<span className="text-red-600">*</span>
-                </Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder="Add your description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Button title="Update" onClick={handleUpdateProfile}/>
-            </Form>
-          </Col> */}
-      {/* </Row> */}
-      {/* </Container> */}
     </div>
   );
 }

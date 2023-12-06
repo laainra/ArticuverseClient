@@ -5,7 +5,7 @@ import SearchBar from "../../components/SearchBar";
 import Cath from "../../components/Cath";
 import MaterialCard from "../../components/MaterialCard";
 import Footer from "../../components/General/Footer";
-
+import { Link } from "react-router-dom";
 export default function Learn() {
   const [materialData, setMaterialData] = useState([]);
   const [catData, setCatData] = useState([]);
@@ -62,13 +62,15 @@ export default function Learn() {
 
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {materialData.slice(0,3).map((mat, index) => (
-          <div key={index} className="w-full ">
+          <div key={index} className="w-full " >
+          <Link to={`/material/${mat.id}`}>
             <MaterialCard
               title={mat.title}
               desc={mat.desc}
               img={getYoutubeThumbnail(mat.path)}
-              to={mat.to}
+              to={mat.id}
             />
+          </Link>
           </div>
         ))}
       </div>

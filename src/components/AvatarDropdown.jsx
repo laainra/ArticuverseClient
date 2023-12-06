@@ -17,7 +17,7 @@ const AvatarDropdown = () => {
   const handleProfileClick = () => {
     // Redirect to the user's profile page
     const username = "get_user_from_api"; // Replace with the actual username from your API
-    navigate(`/profile/${username}`); // Use navigate instead of history.push
+    navigate(`/profile`); // Use navigate instead of history.push
   };
 
   const handleLogoutClick = () => {

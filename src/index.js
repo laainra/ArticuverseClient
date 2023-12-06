@@ -20,6 +20,9 @@ import MaterialTable from "./pages/admin/Materials.jsx";
 import AdminDashboard from "./pages/admin/Dashboard.jsx";
 import { AuthProvider } from 'react-auth-kit'
 import EditProfile from "./pages/Auth/EditProfile.jsx";
+import UploadArtwork from "./pages/UploadArtwork.jsx";
+import ArtworkModal from "./components/ArtworkModal.jsx";
+import MaterialDetail from "./pages/Learning.jsx";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -31,12 +34,12 @@ root.render(
       <Route path="profile" element={<Profile />} />
       <Route path="edit-profile" element={<EditProfile />} />
       <Route path="learn" element={<Learn />} />
-      <Route path="exhibition" element={<Exhibition />} />
       <Route path="admin/dashboard" element={<AdminDashboard />} />
       <Route path="admin/users" element={<UserTable />} />
       <Route path="admin/exhibitions" element={<ExhibitionTable />} />
       <Route path="admin/artworks" element={<ArtworkTable />} />
       <Route path="admin/materials" element={<MaterialTable />} />
+      <Route path="upload-artwork" element={<UploadArtwork />} />
     </Routes>
 
     <Routes>
@@ -46,8 +49,10 @@ root.render(
       <Route path="register" element={<Register />} />
 
       <Route path="explore" element={<Explore />} />
-      <Route path="learn" element={<Learn />} />
       <Route path="exhibition" element={<Exhibition />} />
+      <Route path="home" element={<Home/>} />
+      <Route path="/material/:id" element={<MaterialDetail/>} />
+      <Route path="artwork" element={<ArtworkModal/>} />
     </Routes>
  {/* </AuthProvider> */}
   </BrowserRouter>

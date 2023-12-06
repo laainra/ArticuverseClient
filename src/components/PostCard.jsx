@@ -12,11 +12,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-const PostCard = ({ image, title, author, love, save }) => {
+const PostCard = ({ image, title, artist, love, save, onClick }) => {
   const [isLoved, setIsLoved] = React.useState(false);
 
   return (
-    <Card>
+    <Card onClick={onClick}>
       <CardMedia
         component="img"
         height="278"
@@ -28,13 +28,13 @@ const PostCard = ({ image, title, author, love, save }) => {
         <Typography variant="h5">{title}</Typography>
         <Box display="flex" alignItems="center" mt={1}>
           <Avatar
-            src={author.avatar}
-            alt={author.name}
+            src={artist.avatar}
+            alt={artist.name}
             sx={{ width: 27, height: 27, borderRadius: '50%' }}
             
           />
           <Typography variant="body2" sx={{ marginLeft: 1 }}>
-            {author.name}
+            {artist}
           </Typography>
         </Box>
         <Box display="flex" alignItems="center" mt={1}>

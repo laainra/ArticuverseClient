@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
 import AvatarDropdown from "../AvatarDropdown";
 import { FaPlus } from "react-icons/fa";
+import UploadArtworkModal from "../ModalArtwork";
 
 function Navi() {
   const { isAuthenticated } = useAuth0();
@@ -26,6 +27,7 @@ function Navi() {
   `;
 
   const [expanded, setExpanded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
 
   const getMiniButtonTitle = () => {
@@ -49,10 +51,21 @@ function Navi() {
     return `/${section}`;
   };
 
+
+  const handlePlusIconClick = () => {
+    setShowModal(true); // Set the state to true when FaPlus is clicked
+  };
+
+  const closeUploadModal = () => {
+    setShowModal(false); // Close the modal
+  };
+
   return (
     <div>
       <Navbar bg="light" expand="lg" expanded={expanded} fixed="top">
+      {showModal && <UploadArtworkModal onClose={closeUploadModal} />}
         <Container className="w-full justify-between">
+        
           <div className="flex justify-between items-center">
             <div className="mr-32 2xl:mr-5">
               <Navbar.Brand as={Link} to="/home">
@@ -78,7 +91,7 @@ function Navi() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto lg:ml-32">
               <NavLinkStyle
-                to={getNavLinkHref("")}
+                to={getNavLinkHref("home")}
                 className={`mx-5 ${
                   location.pathname === "/" || location.pathname === "/home"
                     ? "active"
@@ -119,11 +132,11 @@ function Navi() {
               ></NavLinkStyle>
             </Nav>
 
-            {location.pathname === "/profile" && (
+            {location.pathname !== "/" && (
               <div className="flex items-center h-12 mt-2">
                 <div className="w-12 h-12 items-center">
                 <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
-                  <a href="/edit-profile"><FaPlus className="text-white text-2xl p-1" /></a>
+                  <FaPlus className="text-white text-2xl p-1" onClick={handlePlusIconClick}/>
                 </div>
                 </div>
 
@@ -131,7 +144,7 @@ function Navi() {
               </div>
             )}
 
-            {location.pathname !== "/profile" && (
+            {location.pathname === "/" && (
               <MiniButton title={getMiniButtonTitle()} to={getMiniButtonTo()} />
             )}
           </Navbar.Collapse>
