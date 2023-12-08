@@ -4,9 +4,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import { MiniButton } from './General/Button';
 
-const ExhibitionCard = ({ title, location, date, desc, img, to }) => {
+const ExhibitionCard = ({ title, location, date, desc, img, onClick }) => {
   return (
-    <Card>
+    <Card onClick={onClick}>
       <CardMedia
         component="img"
         height="278"
@@ -33,9 +33,6 @@ const ExhibitionCard = ({ title, location, date, desc, img, to }) => {
           <Typography variant="body2">
             Description: {desc}
           </Typography>
-        </Box>
-        <Box mt={1}>
-          <MiniButton to={to} title="Visit" />
         </Box>
       </CardContent>
     </Card>

@@ -38,7 +38,7 @@ const AvatarDropdown = () => {
                 <img
                   className="w-12 h-12 rounded-full mx-auto object-cover"
                   alt="Ellipse"
-                  src="/image/artist1.jpg"
+                  src="/image/profile.jpg"
                 />
               </div>
             </Dropdown.Toggle>

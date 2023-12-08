@@ -3,13 +3,12 @@ import { Navbar, Container, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { MiniButton } from "./Button";
 import styled from "styled-components";
-import { useAuth0 } from "@auth0/auth0-react";
 import AvatarDropdown from "../AvatarDropdown";
 import { FaPlus } from "react-icons/fa";
 import UploadArtworkModal from "../ModalArtwork";
+import { isAuthenticated } from '../../Auth/AuthHelper.js';
 
 function Navi() {
-  const { isAuthenticated } = useAuth0();
   const NavLinkStyle = styled(Link)`
     margin: 0 0.5rem;
     text-decoration: none;
@@ -132,21 +131,28 @@ function Navi() {
               ></NavLinkStyle>
             </Nav>
 
-            {location.pathname !== "/" && (
+            {isAuthenticated() ? (
               <div className="flex items-center h-12 mt-2">
                 <div className="w-12 h-12 items-center">
-                <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
-                  <FaPlus className="text-white text-2xl p-1" onClick={handlePlusIconClick}/>
-                </div>
+                  <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
+                    <FaPlus
+                      className="text-white text-2xl p-1"
+                      onClick={handlePlusIconClick}
+                    />
+                  </div>
                 </div>
 
                 <AvatarDropdown />
               </div>
+            ) : (
+              <MiniButton
+                title={getMiniButtonTitle()}
+                to={getMiniButtonTo()}
+              />
             )}
 
-            {location.pathname === "/" && (
-              <MiniButton title={getMiniButtonTitle()} to={getMiniButtonTo()} />
-            )}
+
+
           </Navbar.Collapse>
         </Container>
       </Navbar>

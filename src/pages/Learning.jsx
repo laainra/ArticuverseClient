@@ -16,7 +16,7 @@ const MaterialDetail = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setLoading(false); // Set loading to false whether the request was successful or not
+      setLoading(false);
     }
   };
 

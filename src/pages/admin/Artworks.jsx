@@ -17,6 +17,146 @@ import Sidebar from "../../components/General/Sidebar";
 
 function ArtworkTable() {
   const [artworkData, setArtworkData] = useState([]);
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [poster, setPoster] = useState("");
+  const [start_date, setStartDate] = useState("");
+  const [end_date, setEndDate] = useState("");
+  const [showInsert, setShowInsert] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setPoster(file);
+  };
+
+  const UpdateDataExhibition = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/update-exhibition/${id}`,
+        {
+          name,
+          description,
+          location,
+          poster,
+          start_date,
+          end_date,
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Data berhasil diubah");
+        window.location.replace("http://localhost:3000/admin/exhibitions");
+      } else {
+        alert("Failed to update data");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while submitting data");
+    }
+  };
+
+  const InsertDataExhibition = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/insert-exhibition",
+        {
+          name,
+          description,
+          location,
+          poster,
+          start_date,
+          end_date,
+        }
+      );
+
+      if (response.status === 201) {
+        alert("Data berhasil ditambahkan");
+        window.location.replace("http://localhost:3000/admin/exhibitions");
+      } else {
+        alert("Failed to insert data");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while submitting data");
+    }
+  };
+  const deleteExhibition = async (event) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/delete-exhibition/${id}`
+      );
+
+      if (response.status === 200) {
+        alert("Exhibition deleted successfully");
+        window.location.replace("http://localhost:3000/admin/exhibitions");
+      } else {
+        alert("Failed to delete exhibition");
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting exhibition:", error);
+      alert("An error occurred while deleting exhibition");
+    }
+  };
+
+  const showModalUpdate = (data) => {
+    setId(data.id);
+    setName(data.name);
+    setDescription(data.description);
+    setLocation(data.location);
+    setPoster(data.poster);
+    setStartDate(data.start_date);
+    setEndDate(data.end_date);
+    setShowInsert(false);
+    setShowUpdate(true);
+
+    // Log existing data for verification
+    console.log("Existing Data:", data);
+  };
+
+  const closeModal = () => {
+    setId("");
+    setName("");
+    setDescription("");
+    setLocation("");
+    setStartDate("");
+    setEndDate("");
+    setShowInsert(false);
+    setShowUpdate(false);
+  };
+  const showModalInsert = () => {
+    setId("");
+    setName("");
+    setDescription("");
+    setLocation("");
+    setStartDate("");
+    setEndDate("");
+    setShowInsert(true);
+    setShowUpdate(false);
+  };
+
+  const showModalDelete = (data) => {
+    setId(data.id);
+    setName(data.name);
+    setDescription(data.description);
+
+    setShowDelete(true);
+  };
+
+  const closeModalDelete = () => {
+    setId("");
+    setName("");
+    setDescription("");
+    setShowDelete(false);
+  };
 
   const fetchArtworkData = async () => {
     try {

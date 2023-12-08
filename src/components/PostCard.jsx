@@ -12,7 +12,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
-const PostCard = ({ image, title, artist, love, save, onClick }) => {
+const PostCard = ({ image, title, artist, love,  onClick }) => {
   const [isLoved, setIsLoved] = React.useState(false);
 
   return (

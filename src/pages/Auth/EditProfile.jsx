@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Navi from "../../components/General/Navbar.jsx";
 import { Button } from "../../components/General/Button.jsx";
 import {
@@ -17,6 +17,34 @@ export default function EditProfile() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
+  const [userData, setUserData] = useState({
+  });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.status === 200) {
+          // Use response.data instead of response.json()
+          const data = response.data;
+          console.log("User Data:", data);
+          setUserData(data.user); // Assuming your user data is nested under 'user' key
+        } else {
+          console.error("Error fetching user data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
 
   const handleUpdateProfile = () => {
     // Handle update logic here
@@ -29,7 +57,7 @@ export default function EditProfile() {
         <MDBRow>
           <MDBCol col="8" md="4" className="text-center items-center">
             <img
-              src="/image/artist1.jpg"
+              src="/image/profile.jpg"
               alt="Avatar"
               className="w-32 h-32 rounded-circle ml-60 mt-40 object-cover"
             />
@@ -57,13 +85,13 @@ export default function EditProfile() {
               wrapperClass="mb-4"
               label={
                 <span>
-                  <i className="fas fa-user mr-2"></i> Add Your Name
+                  <i className="fas fa-user mr-2"></i> Your Name
                 </span>
               }
               id="formControlLg"
               type="text"
               size="lg"
-              value={name}
+              value={userData.name}
               onChange={(e) => setName(e.target.value)}
             />
                         <h6 className="text-bold">
@@ -79,7 +107,7 @@ export default function EditProfile() {
               id="formControlLg"
               type="text"
               size="lg"
-              value={username}
+              value={userData.username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <h6 className="text-bold">
@@ -95,7 +123,7 @@ export default function EditProfile() {
               id="formControlLg"
               type="text"
               size="lg"
-              value={description}
+              value={userData.description}
               onChange={(e) => setDescription(e.target.value)}
             />
 

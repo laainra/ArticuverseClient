@@ -1,11 +1,7 @@
 const isAuthenticated = () => {
-    // Check if the user is authenticated, e.g., by verifying the presence of a valid JWT token
     const token = localStorage.getItem('token');
     return token !== null;
-  };
-  
-
-
+};
 
 const handleLogin = async (email, password) => {
   try {

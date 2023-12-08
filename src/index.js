@@ -2,11 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-
 import Home from "./pages/Home.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
-import { BrowserRouter, Routes, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import reportWebVitals from "./reportWebVitals";
 import Profile from "./pages/Auth/Profile";
@@ -18,47 +17,44 @@ import ExhibitionTable from "./pages/admin/Exhibitions.jsx";
 import ArtworkTable from "./pages/admin/Artworks.jsx";
 import MaterialTable from "./pages/admin/Materials.jsx";
 import AdminDashboard from "./pages/admin/Dashboard.jsx";
-import { AuthProvider } from 'react-auth-kit'
 import EditProfile from "./pages/Auth/EditProfile.jsx";
 import UploadArtwork from "./pages/UploadArtwork.jsx";
 import ArtworkModal from "./components/ArtworkModal.jsx";
 import MaterialDetail from "./pages/Learning.jsx";
+import { isAuthenticated } from "./Auth/AuthHelper.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-{/* <AuthProvider authType = {'localstorage'}
-                  authName={'_auth'}> */}
-    <Routes path="/" element={<PrivateRoute />}>
-      <Route index element={<Home />} />
-      <Route path="profile" element={<Profile />} />
-      <Route path="edit-profile" element={<EditProfile />} />
-      <Route path="learn" element={<Learn />} />
-      <Route path="admin/dashboard" element={<AdminDashboard />} />
-      <Route path="admin/users" element={<UserTable />} />
-      <Route path="admin/exhibitions" element={<ExhibitionTable />} />
-      <Route path="admin/artworks" element={<ArtworkTable />} />
-      <Route path="admin/materials" element={<MaterialTable />} />
-      <Route path="upload-artwork" element={<UploadArtwork />} />
-    </Routes>
-
     <Routes>
-      <Route index element={<Home />} />
-      {/* <Route path="home" element={<Home />} /> */}
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
       <Route path="explore" element={<Explore />} />
       <Route path="exhibition" element={<Exhibition />} />
-      <Route path="home" element={<Home/>} />
-      <Route path="/material/:id" element={<MaterialDetail/>} />
-      <Route path="artwork" element={<ArtworkModal/>} />
+      <Route path="/material/:id" element={<MaterialDetail />} />
+      <Route path="artwork" element={<ArtworkModal />} />
+
+      {/* Conditional Rendering based on Authentication */}
+      {isAuthenticated() ? (
+        <>
+          <Route path="profile" element={<Profile />} />
+          <Route path="edit-profile" element={<EditProfile />} />
+          <Route path="learn" element={<Learn />} />
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/users" element={<UserTable />} />
+          <Route path="admin/exhibitions" element={<ExhibitionTable />} />
+          <Route path="admin/artworks" element={<ArtworkTable />} />
+          <Route path="admin/materials" element={<MaterialTable />} />
+          <Route path="upload-artwork" element={<UploadArtwork />} />
+        </>
+      ) : (
+        <>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </>
+      )}
     </Routes>
- {/* </AuthProvider> */}
   </BrowserRouter>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
