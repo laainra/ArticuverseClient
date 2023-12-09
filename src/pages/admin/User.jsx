@@ -44,7 +44,8 @@ function UserTable() {
 
       if (response.status === 200) {
         alert("User deleted successfully");
-        window.location.replace("http://localhost:3000/admin/users");
+        closeModalDelete();
+        fetchUserData();
       } else {
         alert("Failed to delete user");
       }

@@ -22,7 +22,15 @@ import UploadArtwork from "./pages/UploadArtwork.jsx";
 import ArtworkModal from "./components/ArtworkModal.jsx";
 import MaterialDetail from "./pages/Learning.jsx";
 import { isAuthenticated } from "./Auth/AuthHelper.js";
+import SearchResult from "./pages/SearchResult.jsx";
 
+const isAdmin = () => {
+  // You may want to check the user's role in the token or make an additional API call
+  // For simplicity, assuming the presence of an "admin" role in the token
+  const role = localStorage.getItem("role");
+  console.log(role)
+  return role === "admin";
+};
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
@@ -30,21 +38,27 @@ root.render(
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="explore" element={<Explore />} />
+      <Route path="search-result" element={<SearchResult />} />
       <Route path="exhibition" element={<Exhibition />} />
       <Route path="/material/:id" element={<MaterialDetail />} />
       <Route path="artwork" element={<ArtworkModal />} />
-
+      
+      {isAdmin() && (
+        <>
+          <Route path="admin/dashboard" element={<AdminDashboard />} />
+          <Route path="admin/users" element={<UserTable />} />
+          <Route path="admin/exhibitions" element={<ExhibitionTable />} />
+          <Route path="admin/artworks" element={<ArtworkTable />} />
+          <Route path="admin/materials" element={<MaterialTable />} />
+        </>
+      )}
       {/* Conditional Rendering based on Authentication */}
       {isAuthenticated() ? (
         <>
           <Route path="profile" element={<Profile />} />
           <Route path="edit-profile" element={<EditProfile />} />
           <Route path="learn" element={<Learn />} />
-          <Route path="admin/dashboard" element={<AdminDashboard />} />
-          <Route path="admin/users" element={<UserTable />} />
-          <Route path="admin/exhibitions" element={<ExhibitionTable />} />
-          <Route path="admin/artworks" element={<ArtworkTable />} />
-          <Route path="admin/materials" element={<MaterialTable />} />
+
           <Route path="upload-artwork" element={<UploadArtwork />} />
         </>
       ) : (

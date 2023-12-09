@@ -22,6 +22,7 @@ import {
 } from "recharts";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "../../components/General/Sidebar";
+import { FaBookReader, FaImages, FaPersonBooth, FaUsers } from "react-icons/fa";
 
 const DashboardCard = ({ title, date, count, icon }) => (
   <Card className="bg-red-200 rounded-md p-4 mb-3  w-100">
@@ -34,7 +35,7 @@ const DashboardCard = ({ title, date, count, icon }) => (
         {date}
       </Typography>
       <Typography variant="h5" className="my-3">
-        {count} {title}
+         {title} : {count}
       </Typography>
       <Typography variant="body2" className="text-red-600">
         Updated today
@@ -59,79 +60,131 @@ const LineChartContainer = ({ data, dataKey, name }) => (
   </Box>
 );
 
+
 export default function AdminDashboard() {
-  // const [userData, setUserData] = useState([]);
-  // const [artworkData, setArtworkData] = useState([]);
-  // const [exhibitionData, setExhibitionData] = useState([]);
-  // const [materialData, setMaterialData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [artworkData, setArtworkData] = useState([]);
+  const [exhibitionData, setExhibitionData] = useState([]);
+  const [materialData, setMaterialData] = useState([]);
 
-  const [userData, setUserData] = useState([
-    { month: "Jan", userCount: 10 },
-    { month: "Feb", userCount: 15 },
-    { month: "Mar", userCount: 8 },
-    // ... Add more data as needed
-  ]);
-
-  const [artworkData, setArtworkData] = useState([
-    { month: "Jan", artworkCount: 20 },
-    { month: "Feb", artworkCount: 25 },
-    { month: "Mar", artworkCount: 18 },
-    // ... Add more data as needed
-  ]);
-
-  const [exhibitionData, setExhibitionData] = useState([
-    { month: "Jan", exhibitionCount: 5 },
-    { month: "Feb", exhibitionCount: 8 },
-    { month: "Mar", exhibitionCount: 3 },
-    // ... Add more data as needed
-  ]);
-
-  const [materialData, setMaterialData] = useState([
-    { month: "Jan", materialCount: 12 },
-    { month: "Feb", materialCount: 10 },
-    { month: "Mar", materialCount: 15 },
-    // ... Add more data as needed
-  ]);
 
   useEffect(() => {
-    // Fetch data from API and set the state variables
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [userResponse, artworkResponse, exhibitionResponse, materialResponse] = await Promise.all([
+          axios.get('http://localhost:8080/user'),
+          axios.get('http://localhost:8080/artwork'),
+          axios.get('http://localhost:8080/exhibition'),
+          axios.get('http://localhost:8080/material'),
+        ]);
+  
+        setUserData(userResponse.data.data);
+        setArtworkData(artworkResponse.data.data);
+        setExhibitionData(exhibitionResponse.data.data);
+        setMaterialData(materialResponse.data.data);
+  
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []); 
+  
+  useEffect(() => {
+    console.log('Total User Count:', userData?.length || 0);
+  }, [userData]);
+  
+  useEffect(() => {
+    console.log('Total Artwork Count:', artworkData?.length || 0);
+  }, [artworkData]);
+  
+  useEffect(() => {
+    console.log('Total Exhibition Count:', exhibitionData?.length || 0);
+  }, [exhibitionData]);
+  
+  useEffect(() => {
+    console.log('Total Material Count:', materialData?.length || 0);
+  }, [materialData]);
+  
 
-  const userIcon = <Avatar alt="User Icon" src="/path/to/user-icon.png" />;
+  const totalUserCount = userData.length;
+  const totalArtworkCount = artworkData.length;
+  const totalExhibitionCount = exhibitionData.length;
+  const totalMaterialCount = materialData.length;
+  
+  console.log('Total User Count:', totalUserCount);
+  console.log('Total Artwork Count:', totalArtworkCount);
+  console.log('Total Exhibition Count:', totalExhibitionCount);
+  console.log('Total Material Count:', totalMaterialCount);
+
+  const userIcon = <FaUsers/>;
   const artworkIcon = (
-    <Avatar alt="Artwork Icon" src="/path/to/artwork-icon.png" />
+    <FaImages />
   );
   const exhibitionIcon = (
-    <Avatar alt="Exhibition Icon" src="/path/to/exhibition-icon.png" />
+    <FaPersonBooth />
   );
   const materialIcon = (
-    <Avatar alt="Material Icon" src="/path/to/material-icon.png" />
+    <FaBookReader />
   );
 
-  // Placeholder data for Line Charts
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1; // Months are zero-based
+  const currentYear = currentDate.getFullYear();
+
+ 
+  const getLast5Months = () => {
+    const months = [];
+    for (let i = 0; i < 5; i++) {
+      const month = (currentMonth - i + 12) % 12 || 12;
+      months.unshift(`${currentYear}-${month}`);
+    }
+    return months;
+  };
+
+  const last5Months = getLast5Months();
+
+  const filterDataByLast5Months = (data, dataKey) => {
+    if (Array.isArray(data)) {
+      const aggregatedData = {};
+      data.forEach((item) => {
+        const createdAt = item.created_at;
+        if (createdAt) {
+          const itemDate = new Date(createdAt);
+          const itemMonth = `${itemDate.getFullYear()}-${itemDate.getMonth() + 1}`;
+          aggregatedData[itemMonth] = (aggregatedData[itemMonth] || 0) + 1;
+        }
+      });
+  
+      return Object.keys(aggregatedData).map((month) => ({
+        month,
+        [dataKey]: aggregatedData[month],
+      }));
+    }
+    return [];
+  };
+  
+
+  const dummyData = [
+    { month: "2023-05", userCount: 15, artworkCount: 20, exhibitionCount: 10, materialCount: 5 },
+    { month: "2023-06", userCount: 18, artworkCount: 25, exhibitionCount: 12, materialCount: 8 },
+    { month: "2023-07", userCount: 20, artworkCount: 30, exhibitionCount: 15, materialCount: 10 },
+    { month: "2023-08", userCount: 22, artworkCount: 35, exhibitionCount: 18, materialCount: 12 },
+    { month: "2023-09", userCount: 25, artworkCount: 40, exhibitionCount: 20, materialCount: 15 },
+  ];
+
   const userChart = (
-    <LineChartContainer data={userData} dataKey="userCount" name="User" />
+    <LineChartContainer data={dummyData} dataKey="userCount" name="User" />
   );
   const artworkChart = (
-    <LineChartContainer
-      data={artworkData}
-      dataKey="artworkCount"
-      name="Artwork"
-    />
+    <LineChartContainer data={dummyData} dataKey="artworkCount" name="Artwork" />
   );
   const exhibitionChart = (
-    <LineChartContainer
-      data={exhibitionData}
-      dataKey="exhibitionCount"
-      name="Exhibition"
-    />
+    <LineChartContainer data={dummyData} dataKey="exhibitionCount" name="Exhibition" />
   );
   const materialChart = (
-    <LineChartContainer
-      data={materialData}
-      dataKey="materialCount"
-      name="Material"
-    />
+    <LineChartContainer data={dummyData} dataKey="materialCount" name="Material" />
   );
 
   return (

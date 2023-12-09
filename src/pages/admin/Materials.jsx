@@ -20,29 +20,51 @@ function MaterialTable() {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setSelectedCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [path, setPath] = useState("");
   const [showInsert, setShowInsert] = useState(false);
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
-
   const fetchMaterialData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/material");
-      if (Array.isArray(response.data.data)) {
-        setMaterialData(response.data.data);
-        console.log(response.data.data);
-      } else {
-        console.error("Response data is not an array:", response.data);
-      }
+      const materialsResponse = await axios.get(
+        "http://localhost:8080/material"
+      );
+
+      // console.log("Categories Response:", categoriesResponse.data); // Log category data
+
+      setMaterialData(materialsResponse.data.data);
+      // setCategory(categoriesResponse.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  const fetchCategories = async () => {
+    try {
+      const categoriesResponse = await axios.get(
+        "http://localhost:8080/category"
+      );
+      console.log("Categories Response:", categoriesResponse.data);
 
+      const categoriesData = categoriesResponse.data.data || [];
+      setCategories(
+        Array.isArray(categoriesData)
+          ? categoriesData.map((cat) => cat.name)
+          : []
+      );
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
   useEffect(() => {
+
+
     fetchMaterialData();
+    fetchCategories();
   }, []);
+
+  console.log("categories:", categories); // Log the value of category
 
   const UpdateDataMaterial = async (event) => {
     event.preventDefault();
@@ -60,7 +82,8 @@ function MaterialTable() {
 
       if (response.status === 200) {
         alert("Data berhasil diubah");
-        window.location.replace("http://localhost:3000/admin/materials");
+        closeModal();
+        fetchMaterialData();
       } else {
         alert("Failed to update data");
       }
@@ -86,7 +109,8 @@ function MaterialTable() {
 
       if (response.status === 201) {
         alert("Data berhasil ditambahkan");
-        window.location.replace("http://localhost:3000/admin/materials");
+        closeModal();
+        fetchMaterialData();
       } else {
         alert("Failed to insert data");
       }
@@ -104,7 +128,8 @@ function MaterialTable() {
 
       if (response.status === 200) {
         alert("Material deleted successfully");
-        window.location.replace("http://localhost:3000/admin/materials");
+        closeModalDelete();
+        fetchMaterialData();
       } else {
         alert("Failed to delete Material");
       }
@@ -118,7 +143,7 @@ function MaterialTable() {
     setId(data.id);
     setTitle(data.title);
     setDescription(data.description);
-    setCategory(data.location);
+    setSelectedCategory(Array.isArray(data.category) ? data.category[0] : "");
     setPath(data.path);
     setShowInsert(false);
     setShowUpdate(true);
@@ -131,7 +156,7 @@ function MaterialTable() {
     setId("");
     setTitle("");
     setDescription("");
-    setCategory("");
+    setSelectedCategory("");
     setPath("");
     setShowInsert(false);
     setShowUpdate(false);
@@ -140,7 +165,7 @@ function MaterialTable() {
     setId("");
     setTitle("");
     setDescription("");
-    setCategory("");
+    setSelectedCategory("");
     setPath("");
     setShowInsert(true);
     setShowUpdate(false);
@@ -166,7 +191,7 @@ function MaterialTable() {
       <Sidebar />
       <div className="flex">
         <div className=" p-5">
-        <Modal show={showDelete} onHide={closeModalDelete}>
+          <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
               <Modal.Title>Are you sure to delete this data?</Modal.Title>
             </Modal.Header>
@@ -226,7 +251,7 @@ function MaterialTable() {
                   <Form.Label>Description</Form.Label>
                   <Form.Control
                     type="text"
-                    autoFocus
+                    
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                   />
@@ -235,15 +260,15 @@ function MaterialTable() {
                   <Form.Label>Category</Form.Label>
                   <Form.Control
                     as="select"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
                     value={category}
                   >
-                    <option value="" disabled>
+                    <option value={category} disabled>
                       Select a category
                     </option>
-                    {materialData.map((material) => (
-                      <option key={material.id} value={material.icategory}>
-                        {material.category}
+                    {categories.map((categoryItem, index) => (
+                      <option key={index} value={categoryItem}>
+                        {categoryItem}
                       </option>
                     ))}
                   </Form.Control>
@@ -262,7 +287,7 @@ function MaterialTable() {
                     // onChange={handleFileChange}
                     onChange={(e) => setPath(e.target.value)}
                     placeholder=""
-                    autoFocus
+                    
                   />
                 </Form.Group>
                 <Button type="submit" color="primary" className="px-4 mt-2">
@@ -301,7 +326,7 @@ function MaterialTable() {
                   <Form.Label></Form.Label>
                   <Form.Control
                     type="text"
-                    autoFocus
+                   
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                   />
@@ -310,15 +335,15 @@ function MaterialTable() {
                   <Form.Label>Category</Form.Label>
                   <Form.Control
                     as="select"
-                    onChange={(e) => setCategory(e.target.value)}
+                    onChange={(e) => setSelectedCategory([e.target.value])}
                     value={category}
                   >
                     <option value="" disabled>
                       Select a category
                     </option>
-                    {materialData.map((material) => (
-                      <option key={material.id} value={material.category}>
-                        {material.category}
+                    {categories.map((categoryItem, index) => (
+                      <option key={index} value={categoryItem}>
+                        {categoryItem}
                       </option>
                     ))}
                   </Form.Control>
@@ -337,7 +362,7 @@ function MaterialTable() {
                     onChange={(e) => setPath(e.target.value)}
                     // accept=".jpg, .jpeg, .png"
                     type="text"
-                    autofocus
+                    
                     value={path}
                   />
                 </Form.Group>

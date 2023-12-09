@@ -28,6 +28,7 @@ function ExhibitionTable() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
+
   const fetchExhibitionData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/exhibition");
@@ -53,18 +54,19 @@ function ExhibitionTable() {
 
   const UpdateDataExhibition = async (event) => {
     event.preventDefault();
-
+    // const formData = new FormData();
+    // formData.append("name", name);
+    // formData.append("description", description);
+    // formData.append("location", location);
+    // formData.append("start_date", start_date);
+    // formData.append("end_date", end_date);
+    // if (poster) {
+    //   formData.append("poster", poster);
+    // }
     try {
       const response = await axios.put(
         `http://localhost:8080/update-exhibition/${id}`,
-        {
-          name,
-          description,
-          location,
-          poster,
-          start_date,
-          end_date,
-        }
+        {name,description,location,poster,start_date,end_date},
       );
 
       if (response.status === 200) {
@@ -82,22 +84,31 @@ function ExhibitionTable() {
   const InsertDataExhibition = async (event) => {
     event.preventDefault();
 
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("location", location);
+    formData.append("start_date", start_date);
+    formData.append("end_date", end_date);
+    if (poster) {
+      formData.append("poster", poster);
+    }
     try {
       const response = await axios.post(
         "http://localhost:8080/insert-exhibition",
+        formData,
         {
-          name,
-          description,
-          location,
-          poster,
-          start_date,
-          end_date,
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
 
       if (response.status === 201) {
         alert("Data berhasil ditambahkan");
-        window.location.replace("http://localhost:3000/admin/exhibitions");
+        closeModal(); 
+        fetchExhibitionData();
       } else {
         alert("Failed to insert data");
       }
@@ -114,7 +125,8 @@ function ExhibitionTable() {
 
       if (response.status === 200) {
         alert("Exhibition deleted successfully");
-        window.location.replace("http://localhost:3000/admin/exhibitions");
+        closeModalDelete(); 
+        fetchExhibitionData();
       } else {
         alert("Failed to delete exhibition");
       }
@@ -267,10 +279,9 @@ function ExhibitionTable() {
                 <Form.Group controlId="exampleForm.ControlInput1">
                   <Form.Label>Poster</Form.Label>
                   <Form.Control
-                    type="text"
-                    onChange={(e) => setPoster(e.target.value)}
+                    type="file"
+                    onChange={handleFileChange}
                     accept=".jpg, .jpeg, .png"
-                    autoFocus
                   />
                 </Form.Group>
                 <Form.Group
@@ -361,11 +372,11 @@ function ExhibitionTable() {
                   <Form.Label>Poster</Form.Label>
                   <Form.Control
                     // onChange={handleFileChange}
-                    onChange={(e) => setPoster(e.target.value)}
-                    accept=".jpg, .jpeg, .png"
                     type="text"
-                    autofocus
+                    onChange={(e) =>setPoster(e.target.value)}
+                    // accept=".jpg, .jpeg, .png"
                     value={poster}
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group
@@ -458,8 +469,8 @@ function ExhibitionTable() {
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         <img
-                          src={`/image/${exhibition.poster}`}
-                          alt={exhibition.poster}
+                          src={`http://localhost:8080/uploads/${exhibition.poster}`}
+                          alt={exhibition.name}
                           width="300px"
                           height="200px"
                         />

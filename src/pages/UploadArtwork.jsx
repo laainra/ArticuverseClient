@@ -18,40 +18,103 @@ import axios from "axios";
 
 export default function UploadArtwork() {
   const [title, setTitle] = useState("");
-  const [genre, setGenre] = useState("");
-  const [artist, setArtist] = useState("");
   const [description, setDescription] = useState("");
   const [showModal, setShowModal] = useState(false);
   const location = useLocation();
+  const [artworkData, setArtworkData] = useState([]);
+  const [id, setId] = useState("");
+  const [media, setMedia] = useState(null);
+  const [artist, setArtist] = useState("");
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState('');
+  const [genre, setGenre] = useState("");
+  const [creation_year, setCreationYear] = useState("");
 
+  const [userData, setUserData] = useState({});
+  const [user, setUser] = useState({});
+
+  console.log(localStorage.getItem("userId"));
+
+  const handleFileChange = (e) => {
+    setMedia(e.target.files[0]);
+  };
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/user`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.status === 200) {
+        // Use response.data instead of response.json()
+        const data = response.data;
+        console.log("User Data:", data);
+        setUserData(data.user); // Assuming your user data is nested under 'user' key
+      } else {
+        console.error("Error fetching user data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error during fetch:", error);
+    }
+  };
 
   const fetchGenres = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/genre");
-      if (Array.isArray(response.data.data)) {
-        setGenres(response.data.data);
-        console.log(response.data.data);
-      } else {
-        console.error("Response data is not an array:", response.data.data);
-      }
+      const genresResponse = await axios.get("http://localhost:8080/genre");
+      console.log("genres Response:", genresResponse.data);
+
+      const genresData = genresResponse.data.data || [];
+      setGenres(
+        Array.isArray(genresData) ? genresData.map((cat) => cat.name) : []
+      );
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching genres:", error);
     }
   };
   useEffect(() => {
-    // Fetch genres from the backend
     fetchGenres();
-}, []);
+    fetchUserData();
+  }, []);
 
+  const handleUpload = async (event) => {
+    event.preventDefault();
+    const user_id = localStorage.getItem("userId");
+    // setUser(user_id);
 
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("media", media); // assuming media is a File object
+    formData.append("artist", artist);
+    formData.append("creation_year", creation_year);
+    formData.append("genre", genre);
+    formData.append("user_id", user_id);
 
-  const handleUpload = () => {
-    setShowModal(true); 
+    console.log(user_id)
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/insert-artwork",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        
+        setShowModal(true);
+      } else {
+        alert("Failed to insert data");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while submitting data");
+    }
   };
-
- 
 
   const closeModal = () => {
     setShowModal(false); // Close the modal
@@ -62,30 +125,39 @@ export default function UploadArtwork() {
       {showModal && <ArtworkModal onClose={closeModal} />}
 
       <Navi />
-      
+
       <MDBContainer fluid className="p-3 my-2 h-custom mt-5">
         <MDBRow>
           <MDBCol col="8" md="4" className="text-center items-center">
             <img
               src="/image/up_img.png"
               alt="Art Upload"
-              className="w-80 h-80 ml-60 mt-32 mr-60 object-cover"
+              className="w-80 h-80 ml-40 mt-32 mr-60 object-cover"
             />
-            {/* <MDBBtn
+            <MDBBtn
               tag="label"
               color="danger"
               rounded
               size="xl"
-              htmlFor="avatarFile"
-              className="ml-40 mt-3"
+              htmlFor="artworkFile"
+              className="ml-44 mt-3"
             >
               Upload Artwork
-              <input type="file" id="avatarFile" style={{ display: "none" }} />
-            </MDBBtn> */}
+              <input
+                type="file"
+                onChange={handleFileChange}
+                id="artworkFile"
+                style={{ display: "none" }}
+                accept=".jpg, .jpeg, .png"
+              />
+            </MDBBtn>
+            <h5 className="text-sm ml-44 mt-2 text-red-500">{media ? `Selected Media: ${media.name}` : ''}</h5>
           </MDBCol>
           <MDBCol col="4" md="4" className=" me-auto ms-auto">
             <div className="mt-12  d-flex flex-row align-items-center justify-content-center">
-              <h5 className="lead fw-bold mb-0 me-3 text-3xl">Upload Artwork</h5>
+              <h5 className="lead fw-bold mb-0 me-3 text-3xl">
+                Upload Artwork
+              </h5>
             </div>
 
             <h6 className="text-bold">
@@ -104,7 +176,7 @@ export default function UploadArtwork() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-                        <h6 className="text-bold">
+            <h6 className="text-bold">
               Artist<span className="text-red-700">*</span>
             </h6>
             <MDBInput
@@ -133,42 +205,43 @@ export default function UploadArtwork() {
               id="formControlLg"
               type="text"
               size="lg"
+              className="h-32"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-                        <h6 className="text-bold">
+            <h6 className="text-bold">
               Genre<span className="text-red-700">*</span>
             </h6>
             <select
               className="form-select mb-4"
               aria-label="Default select example"
-              value={selectedGenre}
-              onChange={(e) => setSelectedGenre(e.target.value)}
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
             >
-              <option value="" disabled>
-                Select genre...
+              <option value={genre} disabled>
+                Select a genre
               </option>
-              {genres.map((genre) => (
-                <option key={genre.id} value={genre.name}>
-                  {genre.name}
+              {genres.map((genreItem, index) => (
+                <option key={index} value={genreItem}>
+                  {genreItem}
                 </option>
               ))}
             </select>
             <h6 className="text-bold">
-              Image Link<span className="text-red-700">*</span>
+            Creation Year<span className="text-red-700">*</span>
             </h6>
             <MDBInput
               wrapperClass="mb-4"
               label={
                 <span>
-                  <i className="fas fa-envelope mr-2"></i> Add Your Art Image Link 
+                  <i className="fas fa-envelope mr-2"></i> Creation Year
                 </span>
               }
               id="formControlLg"
               type="text"
               size="lg"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setCreationYear(e.target.value)}
+              value={creation_year}
             />
 
             <div className=" ml-32 flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">

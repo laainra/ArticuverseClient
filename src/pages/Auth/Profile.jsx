@@ -2,10 +2,43 @@ import React, { useEffect, useState } from "react";
 import Navi from "../../components/General/Navbar.jsx";
 import { MiniButton } from "../../components/General/Button.jsx";
 import axios from "axios";
+import PostCard from "../../components/PostCard.jsx";
+import ArtworkModal from "../ArtworkModal.jsx";
 
 const Profile = () => {
-  const [userData, setUserData] = useState({
-  });
+  const [userData, setUserData] = useState({});
+  const [artworks, setArtworks] = useState([]);
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
+  
+  const openArtworkModal = (artwork) => {
+    setSelectedArtwork(artwork);
+  };
+  
+  const closeArtworkModal = () => {
+    setSelectedArtwork(null);
+  };
+  
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/artworks-user/${userData.id}`
+        );
+
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("Artworks Data:", data);
+          setArtworks(data);
+        } else {
+          console.error("Error fetching artworks:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    };
+
+    fetchArtworks();
+  }, [userData.id]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -61,9 +94,16 @@ const Profile = () => {
     <div className="font-roboto">
       <Navi />
       <div className="h-screen flex flex-col items-center justify-center mt-32">
+      {selectedArtwork && (
+        <ArtworkModal artwork={selectedArtwork} onClose={closeArtworkModal} />
+      )}
         <div className="text-center">
           <img
-            src={ava(userData)}
+            src={
+              userData.avatar != null
+                ? `http://localhost:8080/uploads/${userData.avatar}`
+                : "/image/profile.jpg"
+            }
             alt="User Avatar"
             className="w-48 h-48 rounded-full mx-auto"
             style={imageStyle}
@@ -105,8 +145,18 @@ const Profile = () => {
           <div className="grid grid-cols-2 gap-8 mt-4">
             {activeTab === "works" ? (
               <>
-                <div className="bg-gray-200 w-full h-32 rounded-lg" />
-                <div className="bg-gray-200 w-full h-32 rounded-lg" />
+                              {artworks.map((artwork,index) => (
+                <div key={artwork.id} className="bg-gray-200 w-full h-32 rounded-lg">
+            <PostCard
+              image={artwork.media}
+              title={artwork.title}
+              artist={artwork.artist}
+              love="12"
+              save="3"
+              onClick={() => openArtworkModal(artwork)}
+            />
+                </div>
+              ))}
               </>
             ) : (
               <>
