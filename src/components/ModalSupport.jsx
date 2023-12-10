@@ -16,7 +16,7 @@ const SupportModal = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div
         className="bg-white rounded-lg overflow-hidden flex flex-col items-center "
         style={{ width: 800, height: 500 }}

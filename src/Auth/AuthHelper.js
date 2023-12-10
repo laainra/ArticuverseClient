@@ -3,6 +3,10 @@ const isAuthenticated = () => {
     return token !== null;
 };
 
+const isUserlogin = ()=> {
+    
+}
+
 const handleLogin = async (email, password) => {
   try {
       const response = await fetch("http://localhost:8080/api/login", {

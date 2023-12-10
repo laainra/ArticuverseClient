@@ -92,7 +92,7 @@ function ArtworkTable() {
     const formData = new FormData();
     formData.append("title", title); // Use the state variable directly
     formData.append("description", description); // Use the state variable directly
-    formData.append("media", media);
+    // formData.append("media", media);
     formData.append("artist", artist); // Use the state variable directly
     formData.append("creation_year", creation_year); // Use the state variable directly
     formData.append("genre", genre); // Use the state variable directly

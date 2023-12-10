@@ -5,6 +5,13 @@ import axios from "axios";
 import { useParams } from 'react-router-dom';
 
 const MaterialDetail = () => {
+  useEffect(() => {
+    document.title = `${materialData.title} | Articuverse`; 
+    return () => {
+
+      document.title = 'Articuverse';
+    };
+  }, []);
   const { id } = useParams();
   const [materialData, setMaterialData] = useState({});
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBCol,
@@ -30,7 +30,13 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    document.title = 'Login| Articuverse'; 
+    return () => {
 
+      document.title = 'Articuverse';
+    };
+  }, []);
   return (
     <>
       <Navi />

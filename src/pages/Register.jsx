@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import {
   MDBContainer,
   MDBCol,
@@ -47,7 +47,7 @@ function Register() {
 
         if (response.status === 200) {
           alert("Register Successful");
-          window.location.replace('http://localhost:3000/');
+          window.location.replace('http://localhost:3000/login');
         } else {
           alert("Failed to register");
         }
@@ -57,7 +57,13 @@ function Register() {
       }
     }
   };
+  useEffect(() => {
+    document.title = 'Register | Articuverse'; 
+    return () => {
 
+      document.title = 'Articuverse';
+    };
+  }, []);
   return (
     <>
       <Navi />

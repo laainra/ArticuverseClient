@@ -8,20 +8,10 @@ import Cath from "../components/Cath";
 import ArtworkModal from "./ArtworkModal.jsx";
 import Footer from "../components//General/Footer";
 import { FaBookmark, FaHeart } from "react-icons/fa";
-import {
-
-  MDBCol,
-  MDBRow,
-
-} from "mdb-react-ui-kit";
+import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
-import { MiniButton } from "../components/General/Button";
-import {
-
-  Avatar,
-
-} from '@mui/material';
-
+import { Button, MiniButton } from "../components/General/Button";
+import { Avatar } from "@mui/material";
 
 const dataArtists = [
   {
@@ -41,20 +31,50 @@ const dataArtists = [
   },
 ];
 
-
 const Explore = () => {
+  useEffect(() => {
+    document.title = 'Explore | Articuverse'; 
+    return () => {
+
+      document.title = 'Articuverse';
+    };
+  }, []);
   const [genreData, setGenreData] = useState([]);
   const [artData, setArtData] = useState([]);
+  const [userData, setUserData] = useState({});
   const [selectedArtwork, setSelectedArtwork] = useState(null);
-  
+
   const openArtworkModal = (artwork) => {
     setSelectedArtwork(artwork);
   };
-  
+
   const closeArtworkModal = () => {
     setSelectedArtwork(null);
   };
-  
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.status === 200) {
+          const data = response.data;
+          console.log("User Data:", data);
+          setUserData(data.user);
+        } else {
+          console.error("Error fetching user data:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const fetchGenreData = async () => {
     try {
@@ -87,13 +107,16 @@ const Explore = () => {
     fetchGenreData();
     fetchArtData();
   }, []);
-  
 
   return (
     <div className="mt-20 min-h-screen px-2 flex flex-col items-center">
       <Navi />
       {selectedArtwork && (
-        <ArtworkModal artwork={selectedArtwork} onClose={closeArtworkModal} />
+        <ArtworkModal
+          artwork={selectedArtwork}
+          user={userData}
+          onClose={closeArtworkModal}
+        />
       )}
 
       <div className="md:max-w-xl w-full p-3">
@@ -110,19 +133,22 @@ const Explore = () => {
       <h1 className="text-3xl mt-5 text-center">Top ArtWorks</h1>
 
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-        {artData.map((post, index) => (
+        {artData.slice(0, 6).map((post, index) => (
           <div key={index} className="w-full ">
             <PostCard
-              image={post.media}
-              title={post.title}
-              artist={post.artist}
+              artwork={post}
               love="12"
               save="3"
               onClick={() => openArtworkModal(post)}
             />
           </div>
         ))}
+
+
       </div>
+      <div className="flex mt-3 justify-center">
+          <Button to="/artworks-list" title="More Artworks" />
+        </div>
       <h1 className="text-3xl mt-5 text-center">Top Artists</h1>
       <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {dataArtists.map((artist, index) => (
@@ -139,6 +165,5 @@ const Explore = () => {
     </div>
   );
 };
-
 
 export default Explore;

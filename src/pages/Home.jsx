@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import withSplashScreen from '../components/withSplashScreen';
 
@@ -14,6 +14,15 @@ import Royalties from "../components/Home/royalties";
 import { motion } from "framer-motion";
 
 function Home() {
+
+  useEffect(() => {
+    document.title = 'Dashboard | Articuverse'; 
+    return () => {
+
+      document.title = 'Articuverse';
+    };
+  }, []);
+
   const fadeInVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },

@@ -13,7 +13,7 @@ import {
 } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import { Link, useLocation } from "react-router-dom";
-import ArtworkModal from "../components/ArtworkModal.jsx";
+import ArtworkModal from "../pages/ArtworkModal.jsx";
 import axios from "axios";
 
 export default function UploadArtwork() {
@@ -105,8 +105,8 @@ export default function UploadArtwork() {
       );
 
       if (response.status === 201) {
-        
-        setShowModal(true);
+        alert("Upload New Artwork Successfully!")
+       window.location.replace("localhost:3000/profile");
       } else {
         alert("Failed to insert data");
       }

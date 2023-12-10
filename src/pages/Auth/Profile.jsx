@@ -9,28 +9,33 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   const [artworks, setArtworks] = useState([]);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
-  
+
   const openArtworkModal = (artwork) => {
     setSelectedArtwork(artwork);
   };
-  
+
   const closeArtworkModal = () => {
     setSelectedArtwork(null);
   };
-  
+
+
+
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/artworks-user/${userData.id}`
-        );
+        if (userData.id) {
+          // Ensure userData.id is available before making the request
+          const response = await axios.get(
+            `http://localhost:8080/artworks-user/${userData.id}`
+          );
 
-        if (response.status === 200) {
-          const data = response.data;
-          console.log("Artworks Data:", data);
-          setArtworks(data);
-        } else {
-          console.error("Error fetching artworks:", response.statusText);
+          if (response.status === 200) {
+            const data = response.data.data;
+            console.log("Artworks Data:", data);
+            setArtworks(data);
+          } else {
+            console.error("Error fetching artworks:", response.statusText);
+          }
         }
       } catch (error) {
         console.error("Error during fetch:", error);
@@ -50,10 +55,9 @@ const Profile = () => {
         });
 
         if (response.status === 200) {
-          // Use response.data instead of response.json()
           const data = response.data;
           console.log("User Data:", data);
-          setUserData(data.user); // Assuming your user data is nested under 'user' key
+          setUserData(data.user);
         } else {
           console.error("Error fetching user data:", response.statusText);
         }
@@ -63,6 +67,13 @@ const Profile = () => {
     };
 
     fetchUserData();
+    
+    document.title = userData.name + ' | Articuverse'; 
+    return () => {
+      document.title = 'Articuverse';
+    };
+
+    
   }, []);
 
   const token = localStorage.getItem("token");
@@ -82,21 +93,21 @@ const Profile = () => {
     setActiveTab(tabName);
   };
 
-  const ava = (user) => {
-    if (user.avatar == null) {
-      return "/image/profile.jpg";
-    } else {
-      return user.avatar;
-    }
-  };
+  useEffect(() => {
+    document.title = userData.name; 
+    return () => {
+      document.title = 'Articuverse';
+    };
+  }, []);
+  
 
   return (
-    <div className="font-roboto">
+    <div className="font-roboto flex-col">
       <Navi />
-      <div className="h-screen flex flex-col items-center justify-center mt-32">
-      {selectedArtwork && (
-        <ArtworkModal artwork={selectedArtwork} onClose={closeArtworkModal} />
-      )}
+      <div className="h-screen flex flex-col items-center mt-32">
+        {selectedArtwork && (
+          <ArtworkModal artwork={selectedArtwork} user={userData} onClose={closeArtworkModal} />
+        )}
         <div className="text-center">
           <img
             src={
@@ -116,13 +127,13 @@ const Profile = () => {
           </div>
           <div className="mt-4 text-xl font-bold">
             <div className="flex items-center justify-center space-x-4">
-              <span>Total Works</span>
+              <span>Total Works : {artworks.length}</span>
               {/* <span>Followers</span>
-              <span>Following</span> */}
+            <span>Following</span> */}
             </div>
           </div>
         </div>
-
+  
         <div className="mt-8">
           <div className="flex space-x-8 pb-2">
             <button
@@ -142,21 +153,19 @@ const Profile = () => {
               Saved
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-8 mt-4">
+
+      </div>
+      <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
             {activeTab === "works" ? (
               <>
-                              {artworks.map((artwork,index) => (
-                <div key={artwork.id} className="bg-gray-200 w-full h-32 rounded-lg">
-            <PostCard
-              image={artwork.media}
-              title={artwork.title}
-              artist={artwork.artist}
-              love="12"
-              save="3"
-              onClick={() => openArtworkModal(artwork)}
-            />
-                </div>
-              ))}
+                {artworks.map((post, index) => (
+                  <div key={index} className="lg:w-full sm:w-1/2 md:w-1/3 ">
+                    <PostCard
+                      artwork={post}
+                      onClick={() => openArtworkModal(post)}
+                    />
+                  </div>
+                ))}
               </>
             ) : (
               <>
@@ -166,9 +175,9 @@ const Profile = () => {
             )}
           </div>
         </div>
-      </div>
     </div>
   );
+  
 };
 
 export default Profile;

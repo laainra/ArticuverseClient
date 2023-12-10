@@ -23,6 +23,7 @@ import ArtworkModal from "./components/ArtworkModal.jsx";
 import MaterialDetail from "./pages/Learning.jsx";
 import { isAuthenticated } from "./Auth/AuthHelper.js";
 import SearchResult from "./pages/SearchResult.jsx";
+import ArtworkList from "./pages/Artwork-List.jsx";
 
 const isAdmin = () => {
   // You may want to check the user's role in the token or make an additional API call
@@ -31,14 +32,18 @@ const isAdmin = () => {
   console.log(role)
   return role === "admin";
 };
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="explore" element={<Explore />} />
       <Route path="search-result" element={<SearchResult />} />
+      <Route path="artworks-list" element={<ArtworkList />} />
       <Route path="exhibition" element={<Exhibition />} />
       <Route path="/material/:id" element={<MaterialDetail />} />
       <Route path="artwork" element={<ArtworkModal />} />
@@ -60,6 +65,7 @@ root.render(
           <Route path="learn" element={<Learn />} />
 
           <Route path="upload-artwork" element={<UploadArtwork />} />
+          <Route path="edit-artwork" element={<UploadArtwork />} />
         </>
       ) : (
         <>

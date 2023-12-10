@@ -7,6 +7,14 @@ import MaterialCard from "../../components/MaterialCard";
 import Footer from "../../components/General/Footer";
 import { Link } from "react-router-dom";
 export default function Learn() {
+
+  useEffect(() => {
+    document.title = 'Learning | Articuverse'; 
+    return () => {
+
+      document.title = 'Articuverse';
+    };
+  }, []);
   const [materialData, setMaterialData] = useState([]);
   const [catData, setCatData] = useState([]);
   const fetchMaterialData = async () => {

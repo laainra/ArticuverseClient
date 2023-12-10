@@ -11,6 +11,13 @@ import { MiniButton } from "../components/General/Button";
 import { Avatar } from "@mui/material";
 
 export default function Exhibition() {
+  useEffect(() => {
+    document.title = 'Exhibition | Articuverse'; 
+    return () => {
+
+      document.title = 'Articuverse';
+    };
+  }, []);
   const [exhibitionData, setExhibitionData] = useState([]);
   const [selectedExhibition, setSelectedExhibition] = useState(null);
 
