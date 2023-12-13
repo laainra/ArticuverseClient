@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUser, FaPaintBrush, FaCube, FaCalendar } from "react-icons/fa";
+import { FaUser, FaPaintBrush, FaCube, FaCalendar, FaMoneyCheck } from "react-icons/fa";
 
 const Sidebar = () => {
   const items = [
@@ -8,6 +8,7 @@ const Sidebar = () => {
     { name: "Artworks", icon: <FaPaintBrush />, path: "/admin/artworks" },
     { name: "Materials", icon: <FaCube />, path: "/admin/materials" },
     { name: "Exhibitions", icon: <FaCalendar />, path: "/admin/exhibitions" },
+    { name: "Commissions", icon: <FaMoneyCheck/>, path: "/admin/commissions" },
   ];
 
   const currentPath = window.location.pathname;

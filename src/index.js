@@ -24,6 +24,10 @@ import MaterialDetail from "./pages/Learning.jsx";
 import { isAuthenticated } from "./Auth/AuthHelper.js";
 import SearchResult from "./pages/SearchResult.jsx";
 import ArtworkList from "./pages/Artwork-List.jsx";
+import SupportModal from "./components/ModalSupport.jsx";
+import Payment from "./pages/Payment.jsx";
+import PaymentSuccess from "./pages/Payment.jsx";
+import AdminCommission from "./pages/admin/Commission.jsx";
 
 const isAdmin = () => {
   // You may want to check the user's role in the token or make an additional API call
@@ -55,6 +59,7 @@ root.render(
           <Route path="admin/exhibitions" element={<ExhibitionTable />} />
           <Route path="admin/artworks" element={<ArtworkTable />} />
           <Route path="admin/materials" element={<MaterialTable />} />
+          <Route path="admin/commissions" element={<AdminCommission />} />
         </>
       )}
       {/* Conditional Rendering based on Authentication */}
@@ -66,6 +71,9 @@ root.render(
 
           <Route path="upload-artwork" element={<UploadArtwork />} />
           <Route path="edit-artwork" element={<UploadArtwork />} />
+          <Route path="support-artwork/:id" element={<Payment />} />
+          <Route path="payment-success" element={<PaymentSuccess />} />
+          
         </>
       ) : (
         <>

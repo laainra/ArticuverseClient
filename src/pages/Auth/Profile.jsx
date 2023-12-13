@@ -9,6 +9,8 @@ const Profile = () => {
   const [userData, setUserData] = useState({});
   const [artworks, setArtworks] = useState([]);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
+  const [userArtworks, setUserArtworks] = useState([]);
+  const userId = localStorage.getItem("userId");
 
   const openArtworkModal = (artwork) => {
     setSelectedArtwork(artwork);
@@ -18,7 +20,23 @@ const Profile = () => {
     setSelectedArtwork(null);
   };
 
+  useEffect(() => {
+    const fetchUserArtworks = async () => {
+      try {
+        // Assuming you have an endpoint to get user artworks
+        const response = await axios.get(
+          `http://localhost:8080/saved-artworks/${userData.id}`
+        );
+        setUserArtworks(response.data);
+        console.log('Saved Artworks', response.data);
+        
+      } catch (error) {
+        console.error("Error fetching user artworks:", error);
+      }
+    };
 
+    fetchUserArtworks();
+  }, [userData.id]);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -67,17 +85,16 @@ const Profile = () => {
     };
 
     fetchUserData();
-    
-    document.title = userData.name + ' | Articuverse'; 
-    return () => {
-      document.title = 'Articuverse';
-    };
 
-    
+    document.title = userData.name + " | Articuverse";
+    return () => {
+      document.title = "Articuverse";
+    };
   }, []);
 
   const token = localStorage.getItem("token");
-  console.log("Token:", token);
+
+  console.log("User:", userId);
 
   const imageStyle = {
     margin: "0 0 20px 0",
@@ -94,19 +111,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    document.title = userData.name; 
+    document.title = userData.name;
     return () => {
-      document.title = 'Articuverse';
+      document.title = "Articuverse";
     };
   }, []);
-  
 
   return (
     <div className="font-roboto flex-col">
       <Navi />
       <div className="h-screen flex flex-col items-center mt-32">
         {selectedArtwork && (
-          <ArtworkModal artwork={selectedArtwork} user={userData} onClose={closeArtworkModal} />
+          <ArtworkModal
+            artwork={selectedArtwork}
+            user={userData}
+            onClose={closeArtworkModal}
+          />
         )}
         <div className="text-center">
           <img
@@ -133,7 +153,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
-  
+
         <div className="mt-8">
           <div className="flex space-x-8 pb-2">
             <button
@@ -153,31 +173,35 @@ const Profile = () => {
               Saved
             </button>
           </div>
-
-      </div>
-      <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-            {activeTab === "works" ? (
-              <>
-                {artworks.map((post, index) => (
-                  <div key={index} className="lg:w-full sm:w-1/2 md:w-1/3 ">
-                    <PostCard
-                      artwork={post}
-                      onClick={() => openArtworkModal(post)}
-                    />
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <div className="bg-gray-200 w-full h-32 rounded-lg" />
-                <div className="bg-gray-200 w-full h-32 rounded-lg" />
-              </>
-            )}
-          </div>
         </div>
+        <div className="mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+          {activeTab === "works" ? (
+            <>
+              {artworks.map((post, index) => (
+                <div key={index} className="lg:w-full sm:w-1/2 md:w-1/3 ">
+                  <PostCard
+                    artwork={post}
+                    onClick={() => openArtworkModal(post)}
+                  />
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              {userArtworks.map((post, index) => (
+                <div key={index} className="lg:w-full sm:w-1/2 md:w-1/3 ">
+                  <PostCard
+                    artwork={post}
+                    onClick={() => openArtworkModal(post)}
+                  />
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
-  
 };
 
 export default Profile;

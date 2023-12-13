@@ -11,23 +11,59 @@ import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import { MiniButton } from "../components/General/Button";
 import {
 
-  Avatar,
+  Avatar,IconButton,Typography
 
 } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import {isAuthenticated} from "../Auth/AuthHelper.js"
 import SupportModal from "../components/ModalSupport.jsx";
 import axios from "axios";
 import EditArtwork from "./EditArtwork.jsx";
 import { Modal, Form, Button } from "react-bootstrap";
 
-const ArtworkModal = ({ artwork, user, onClose,onEditClick }) => {
+const ArtworkModal = ({ artwork,  onClose,onEditClick }) => {
     const [showModal, setShowModal] = useState(true);
     const [artworkData, setArtworkData] = useState([]);
     const [showSupportModal, setShowSupportModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [clickedArtwork, setClickedArtwork] = useState(true);
+    const [isLoved, setIsLoved] = React.useState(false);
+    const [isBookmarked, setIsBookmarked] = React.useState(false);
+    const [likeCount, setLikeCount] = React.useState(artwork.like_count || 0);
   
+    const handleLike = async () => {
+      try {
+        // Assuming you have an endpoint to handle likes
+        const response = await axios.post(`http://localhost:8080/like-artwork/${artwork.id}`);
+        const { liked, likesCount } = response.data;
+        console.log(response.data)
+        setIsLoved(liked);
+        setLikeCount(likesCount);
+      } catch (error) {
+        console.error('Error liking artwork:', error);
+      }
+    };
+
+    const handleSave = async () => {
+      const user_id = localStorage.getItem("userId");
+  
+      try {
+          // Assuming you have an endpoint to handle artwork saving
+          const response = await axios.post(`http://localhost:8080/save-artwork/${artwork.id}`, {
+              user_id: user_id 
+          });
+  
+          const { saved } = response.data;
+          setIsBookmarked(saved);
+      } catch (error) {
+          console.error('Error saving artwork:', error);
+      }
+  };
+  
+
     const handleClose = () => {
       setShowModal(false);
       // Optionally, you can call the onClose prop to notify the parent component
@@ -120,7 +156,7 @@ const ArtworkModal = ({ artwork, user, onClose,onEditClick }) => {
       <div className="mt-10 fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 z-50">
 
         <div className="z-51">
-        {showSupportModal && <SupportModal onClose={closeSupportModal} />}
+        {showSupportModal && <SupportModal artwork={artworkData} onClose={closeSupportModal} />}
         {showEditModal && <EditArtwork artwork={artworkData} handleClose={closeEditModal} />}
         </div>
         <Modal show={showDeleteModal} onHide={closeDeleteModal}>
@@ -230,14 +266,17 @@ const ArtworkModal = ({ artwork, user, onClose,onEditClick }) => {
                   
                 </div>
                 <div className="flex items-center mb-4">
-                  <div className="">
-                    <button className="mr-2">
-                      <FaHeart className="text-sm text-gray-500" />
-                    </button>
-                    <span className="text-sm font-bold mr-2">20</span>
-                    <button className="mr-2">
-                      <FaBookmark className="text-sm text-gray-500" />
-                    </button>
+                  <div className="flex">
+            <IconButton color="primary"onClick={handleLike}>
+              {isLoved ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon sx={{ color: 'red' }} />}
+            </IconButton>
+            <Typography variant="title1" color="textSecondary" className="mt-2">
+            {likeCount} 
+            </Typography>
+            <IconButton color="primary" sx={{ marginLeft: 'auto' }}>
+            {isBookmarked
+? <BookmarkIcon sx={{ color: 'red' }} />: <BookmarkIcon  sx={{ color: 'black' }} onClick={handleSave}/>}
+            </IconButton>
   
                   </div>
                 </div>
