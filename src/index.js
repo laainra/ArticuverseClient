@@ -28,6 +28,8 @@ import SupportModal from "./components/ModalSupport.jsx";
 import Payment from "./pages/Payment.jsx";
 import PaymentSuccess from "./pages/Payment.jsx";
 import AdminCommission from "./pages/admin/Commission.jsx";
+import GenreResult from "./pages/GenreResult.jsx";
+import CategoryResult from "./pages/CategoryResult.jsx";
 
 const isAdmin = () => {
   // You may want to check the user's role in the token or make an additional API call
@@ -48,6 +50,8 @@ root.render(
       <Route path="explore" element={<Explore />} />
       <Route path="search-result" element={<SearchResult />} />
       <Route path="artworks-list" element={<ArtworkList />} />
+      <Route path="genre-result" element={<GenreResult />} />
+      <Route path="category-result" element={<CategoryResult />} />
       <Route path="exhibition" element={<Exhibition />} />
       <Route path="/material/:id" element={<MaterialDetail />} />
       <Route path="artwork" element={<ArtworkModal />} />

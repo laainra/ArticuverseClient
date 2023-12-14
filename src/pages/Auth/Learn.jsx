@@ -6,7 +6,15 @@ import Cath from "../../components/Cath";
 import MaterialCard from "../../components/MaterialCard";
 import Footer from "../../components/General/Footer";
 import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 export default function Learn() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const handleCategoryClick = (category) => {
+ 
+    navigate('/category-result', { state: { categoryId: category.id } });
+  };
 
   useEffect(() => {
     document.title = 'Learning | Articuverse'; 
@@ -87,7 +95,7 @@ export default function Learn() {
 
       <div className="grid grid-cols-1 gap-2 mt-4 md:grid-cols-3 sm:grid-cols-1">
         {catData.map((cath, index) => (
-          <Cath key={index} name={cath.name} img={cath.img} />
+          <Cath key={index} name={cath.name} img={cath.img}  onClick={() => handleCategoryClick(cath)}/>
         ))}
       </div>
 

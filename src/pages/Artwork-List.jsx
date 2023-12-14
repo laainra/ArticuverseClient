@@ -17,7 +17,7 @@ const ArtworkList = () => {
 useEffect(() => {
   if (searchQuery) {
     // Filter artworks based on the genre id from the URL
-    const filteredArtworks = artData.filter(artwork => artwork.genreId === searchQuery);
+    const filteredArtworks = artData.filter(artwork => artwork.genre_id === searchQuery);
     setArtData(filteredArtworks);
   }
 }, [searchQuery]);

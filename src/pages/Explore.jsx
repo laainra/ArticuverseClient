@@ -55,8 +55,8 @@ const Explore = () => {
     setSelectedArtwork(null);
   };
   const handleGenreClick = (genre) => {
-    // Navigate to a new page with the selected genre data as a parameter
-    navigate(`/artworks-list?genre=${genre.id}`);
+ 
+    navigate('/genre-result', { state: { genreId: genre.id } });
   };
 
   useEffect(() => {
@@ -91,22 +91,14 @@ const Explore = () => {
         if (genreId) {
           const response = await axios.get(`http://localhost:8080/genre-artworks/${genreId}`);
           if (response.status === 200) {
-            const data = response.data;
-            console.log("Genre Data:", data);
+            const data = response.data.data;
+            console.log("Artworks Genre Data:", data);
             setArtData(data.artworks);
           } else {
             console.error("Error fetching genre artworks:", response.statusText);
           }
         } else {
-          // If no genre ID is present in the URL, fetch all artworks
-          const response = await axios.get("http://localhost:8080/artwork");
-          if (response.status === 200) {
-            const data = response.data;
-            console.log("All Artworks Data:", data);
-            setArtData(data.data);
-          } else {
-            console.error("Error fetching all artworks:", response.statusText);
-          }
+          console.log("No data exist")
         }
       } catch (error) {
         console.error("Error during fetch:", error);
