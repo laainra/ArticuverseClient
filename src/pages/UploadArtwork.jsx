@@ -79,8 +79,7 @@ export default function UploadArtwork() {
   const handleUpload = async (event) => {
     event.preventDefault();
     const user_id = localStorage.getItem("userId");
-    // setUser(user_id);
-
+    
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -89,24 +88,21 @@ export default function UploadArtwork() {
     formData.append("creation_year", creation_year);
     formData.append("genre", genre);
     formData.append("user_id", user_id);
-
-    console.log(user_id)
-
+  
     try {
       const response = await axios.post(
         "http://localhost:8080/insert-artwork",
-        formData,
+        formData, // Pass FormData directly as the data
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data", // Set Content-Type to multipart/form-data
           },
         }
       );
-
+  
       if (response.status === 201) {
-        alert("Upload New Artwork Successfully!")
-       window.location.replace("localhost:3000/profile");
+        alert("Upload New Artwork Successfully!");
+        window.location.replace("localhost:3000/profile");
       } else {
         alert("Failed to insert data");
       }
@@ -115,6 +111,7 @@ export default function UploadArtwork() {
       alert("An error occurred while submitting data");
     }
   };
+  
 
   const closeModal = () => {
     setShowModal(false); // Close the modal
@@ -151,7 +148,9 @@ export default function UploadArtwork() {
                 accept=".jpg, .jpeg, .png"
               />
             </MDBBtn>
-            <h5 className="text-sm ml-44 mt-2 text-red-500">{media ? `Selected Media: ${media.name}` : ''}</h5>
+            <h5 className="text-sm ml-44 mt-2 text-red-500">
+              {media ? `Selected Media: ${media.name}` : ""}
+            </h5>
           </MDBCol>
           <MDBCol col="4" md="4" className=" me-auto ms-auto">
             <div className="mt-12  d-flex flex-row align-items-center justify-content-center">
@@ -228,7 +227,7 @@ export default function UploadArtwork() {
               ))}
             </select>
             <h6 className="text-bold">
-            Creation Year<span className="text-red-700">*</span>
+              Creation Year<span className="text-red-700">*</span>
             </h6>
             <MDBInput
               wrapperClass="mb-4"

@@ -14,6 +14,14 @@ const ArtworkList = () => {
   const searchQuery = location.state?.search || ''; 
   const [artData, setArtData] = useState([]);
 
+useEffect(() => {
+  if (searchQuery) {
+    // Filter artworks based on the genre id from the URL
+    const filteredArtworks = artData.filter(artwork => artwork.genreId === searchQuery);
+    setArtData(filteredArtworks);
+  }
+}, [searchQuery]);
+
   const fetchArtData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/artwork");

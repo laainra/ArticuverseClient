@@ -14,9 +14,11 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import axios from "axios";
 
 const PostCard = ({ artwork, onClick}) => {
+  const [isLovedByLoginUser, setIsLovedByLoginUser] = React.useState(false);
   const [isLoved, setIsLoved] = React.useState(false);
   const [isBookmarked, setIsBookmarked] = React.useState(false);
   const [likeCount, setLikeCount] = React.useState(artwork.like_count || 0);
+  const [likeCountPlus, setLikeCountPlus] = React.useState(artwork.like_count || 0);
 
   useEffect(() => {
     const likedState = localStorage.getItem(`liked_${artwork.id}`);
@@ -31,21 +33,65 @@ const PostCard = ({ artwork, onClick}) => {
     }
   }, [artwork.id]);
 
+  useEffect(() => {
+    const checkLikedByUser = async () => {
+      const user_id = localStorage.getItem("userId");
+  
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/check-like/${artwork.id}/${user_id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+  
+        if (response.status === 200) {
+          const { likedByUser } = response.data.data;
+          localStorage.setItem(`liked_${artwork.id}`, JSON.stringify(likedByUser));
+          setIsLovedByLoginUser(likedByUser);
+        } else {
+          setIsLovedByLoginUser(false);
+        }
+      } catch (error) {
+        console.error("Error during check:", error);
+        setIsLovedByLoginUser(false);
+      }
+    };
+  
+    // Invoke the function immediately when the component mounts
+    checkLikedByUser();
+  
+    // Cleanup function (invoked when the component is unmounted)
+    return () => {
+      // You can perform any cleanup operations here if needed
+    };
+  }, [artwork.id]);
+  
 
   const handleLike = async () => {
+    const user_id = localStorage.getItem("userId");
     try {
       // Assuming you have an endpoint to handle likes
-      const response = await axios.post(`http://localhost:8080/like-artwork/${artwork.id}`);
+      const response = await axios.post(
+        `http://localhost:8080/like-artwork/${artwork.id}`,  { user_id: user_id } ,{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       const { liked, likesCount } = response.data;
       localStorage.setItem(`liked_${artwork.id}`, JSON.stringify(liked));
-      console.log(response.data)
-      
-      setIsLoved(liked);
+      console.log(response.data);
+      setIsLovedByLoginUser(liked); 
       setLikeCount(likesCount);
     } catch (error) {
-      console.error('Error liking artwork:', error);
+      console.error("Error liking artwork:", error);
     }
   };
+  
+  
 
   const handleSave = async () => {
     const user_id = localStorage.getItem("userId");
@@ -63,6 +109,32 @@ const PostCard = ({ artwork, onClick}) => {
         console.error('Error saving artwork:', error);
     }
 };
+
+useEffect(() => {
+const getLikesByArtwork = async () => {
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/get-likes/${artwork.id}`
+    );
+
+    if (response.status === 200) {
+      const likesData = response.data.totalLikes;
+      console.log("Likes Data:", likesData);
+      setLikeCount(likesData) // Assuming your likes data is nested under 'likes' key
+    } else {
+      console.error("Error fetching likes data:", response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error during fetch:", error);
+    return null;
+  }
+};
+
+getLikesByArtwork();
+}, [artwork.id]);
+
+
 
 
 
@@ -94,7 +166,7 @@ const PostCard = ({ artwork, onClick}) => {
 
           <Box display="flex" alignItems="center" mt={1}>
             <IconButton color="primary"onClick={handleLike}>
-              {isLoved ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon sx={{ color: 'red' }} />}
+              {isLovedByLoginUser ? <FavoriteIcon sx={{ color: 'red' }} /> : <FavoriteBorderIcon sx={{ color: 'red' }} />}
             </IconButton>
             <Typography variant="subtitle1" color="textSecondary">
             {likeCount} 

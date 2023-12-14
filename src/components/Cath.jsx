@@ -1,8 +1,8 @@
 import React from "react";
 
-function Cath({ name,img }) {
+function Cath({ name,img, onClick }) {
   return (
-    <div
+    <div onClick={onClick}
       className="bg-cover bg-center w-80 h-20 m-2 mx-1 sm:mx-5 relative rounded-lg border-1 backdrop-brightness-75"
       style={{
         backgroundImage: `url(/${img})`,

@@ -11,12 +11,12 @@ function Button({ title, to, onClick }) {
   );
 }
 
-function LongButton({ title, to, onClick }) {
+function LongButton({ title, to, onClick, onKeyDown }) {
   return (
-    <LongWrapper to={to} className="animate pointer radius8" onClick={onClick}>
+    <LongWrapper to={to} className="animate pointer radius8" onClick={onClick} onKeyDown={onKeyDown}>
       {title}
     </LongWrapper>
-  );
+  );  
 }
 
 function MiniButton({ title, to, onClick }) {

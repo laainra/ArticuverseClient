@@ -7,9 +7,9 @@ import PostCard from '../components/PostCard';
 import ArtworkModal from './ArtworkModal';
 import Footer from '../components/General/Footer';
 
-const SearchResult = () => {
+const GenrePage = () => {
   const location = useLocation();
-  const searchResult = location.state?.searchResult || [];
+  const GenrePage = location.state?.GenrePage || [];
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const searchQuery = location.state?.search || ''; 
 
@@ -34,8 +34,8 @@ const SearchResult = () => {
       <h1 className="text-3xl mt-5 text-center">Result for "<span className='text-bold text-red-950'>{searchQuery}</span>"</h1>
 
       <div className="mt-5 mb-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
-        {Array.isArray(searchResult) && searchResult.length > 0 ? (
-          searchResult.map((post, index) => (
+        {Array.isArray(GenrePage) && GenrePage.length > 0 ? (
+          GenrePage.map((post, index) => (
             <div key={index} className="w-full">
               <PostCard
                 artwork={post}
@@ -53,4 +53,4 @@ const SearchResult = () => {
   );
 };
 
-export default SearchResult;
+export default GenrePage;

@@ -30,6 +30,7 @@ const AvatarDropdown = () => {
       console.error("Error during fetch:", error);
     }
   };
+
   const handleAvatarClick = () => {
     setShowDropdown(!showDropdown);
   };
@@ -48,7 +49,8 @@ const AvatarDropdown = () => {
   const handleLogoutClick = () => {
     // Handle logout, e.g., clear local storage and redirect to the login page
     localStorage.removeItem("token");
-    navigate("/login"); // Use navigate instead of history.push
+    window.location.replace("http://localhost:3000/login")
+// Use navigate instead of history.push
   };
 
   return (

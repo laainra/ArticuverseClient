@@ -12,6 +12,7 @@ import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import { Button, MiniButton } from "../components/General/Button";
 import { Avatar } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const dataArtists = [
   {
@@ -32,6 +33,8 @@ const dataArtists = [
 ];
 
 const Explore = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     document.title = 'Explore | Articuverse'; 
     return () => {
@@ -50,6 +53,10 @@ const Explore = () => {
 
   const closeArtworkModal = () => {
     setSelectedArtwork(null);
+  };
+  const handleGenreClick = (genre) => {
+    // Navigate to a new page with the selected genre data as a parameter
+    navigate(`/artworks-list?genre=${genre.id}`);
   };
 
   useEffect(() => {
@@ -75,6 +82,41 @@ const Explore = () => {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    const fetchArtworkGenreData = async () => {
+      try {
+        const genreId = genreData.id;
+  
+        if (genreId) {
+          const response = await axios.get(`http://localhost:8080/genre-artworks/${genreId}`);
+          if (response.status === 200) {
+            const data = response.data;
+            console.log("Genre Data:", data);
+            setArtData(data.artworks);
+          } else {
+            console.error("Error fetching genre artworks:", response.statusText);
+          }
+        } else {
+          // If no genre ID is present in the URL, fetch all artworks
+          const response = await axios.get("http://localhost:8080/artwork");
+          if (response.status === 200) {
+            const data = response.data;
+            console.log("All Artworks Data:", data);
+            setArtData(data.data);
+          } else {
+            console.error("Error fetching all artworks:", response.statusText);
+          }
+        }
+      } catch (error) {
+        console.error("Error during fetch:", error);
+      }
+    };
+  
+    fetchArtworkGenreData();
+  }, [location.search]);
+  
+
 
   const fetchGenreData = async () => {
     try {
@@ -127,7 +169,7 @@ const Explore = () => {
 
       <div className="grid grid-cols-1 gap-2 mt-4 md:grid-cols-3 sm:grid-cols-1 mr-3">
         {genreData.map((genre, index) => (
-          <Cath key={index} name={genre.name} img={genre.img} />
+          <Cath key={index} name={genre.name} img={genre.img}  onClick={() => handleGenreClick(genre)}/>
         ))}
       </div>
       <h1 className="text-3xl mt-5 text-center">Top ArtWorks</h1>
@@ -137,8 +179,6 @@ const Explore = () => {
           <div key={index} className="w-full ">
             <PostCard
               artwork={post}
-              love="12"
-              save="3"
               onClick={() => openArtworkModal(post)}
             />
           </div>
@@ -157,6 +197,7 @@ const Explore = () => {
             image={artist.image}
             name={artist.name}
             desc={artist.desc}
+            
           />
         ))}
       </div>

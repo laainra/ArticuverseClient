@@ -143,6 +143,11 @@ function Login() {
                 size="lg"
                 title="Login"
                 onClick={() => handleLogin(email, password)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleLogin(email, password);
+                  }
+                }}
               />
 
               <p className="small fw-bold mt-2 pt-1 mb-2">
