@@ -1,9 +1,11 @@
 import { FaUpload } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
+import { useMediaQuery } from "react-responsive";
 import React, { useState } from "react";
 
 // UploadArtworkModal component
 const UploadArtworkModal = ({ onClose }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 }); 
     const [showModal, setShowModal] = useState(true);
 
     const handleClose = () => {
@@ -13,12 +15,14 @@ const UploadArtworkModal = ({ onClose }) => {
         onClose();
       }
     };
+
+    
   
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-50">
+    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div
         className="bg-white rounded-lg overflow-hidden flex flex-col items-center "
-        style={{ width: 800, height: 500 }}
+        style={{ width: isMobile ? "100%" : 800, height: isMobile ? "100%" : 500 }}
       >
         <div className="flex justify-between p-4 items-center w-full">
           <div className="text-2xl font-bold text-center">

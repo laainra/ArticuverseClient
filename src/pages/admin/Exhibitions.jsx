@@ -189,8 +189,8 @@ function ExhibitionTable() {
 
   return (
     <div className="container flex">
-      <Sidebar />
       <div className="flex">
+      <Sidebar />
         <div className="p-5">
           <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
@@ -461,7 +461,7 @@ function ExhibitionTable() {
                       <CTableDataCell className="text-center">
                         {exhibition.name}
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">
+                      <CTableDataCell className="text-center" style={{ maxWidth: '20rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {exhibition.description}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">

@@ -76,8 +76,8 @@ function UserTable() {
 
   return (
     <div className="container flex">
-      <Sidebar />
       <div className="flex">
+      <Sidebar />
         <div className=" p-5">
                   <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
@@ -139,7 +139,7 @@ function UserTable() {
                       <strong>Email</strong>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
-                      <strong>Role</strong>
+                      <strong>Bank_acc</strong>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
                       <strong>Action</strong>
@@ -162,7 +162,7 @@ function UserTable() {
                         {user.email}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        {user.role}
+                        {user.bank_acc}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                       <Button

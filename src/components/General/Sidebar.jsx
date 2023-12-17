@@ -27,7 +27,7 @@ const Sidebar = () => {
   const currentPath = window.location.pathname;
 
   return (
-    <nav className={`lg:w-72 lg:px-2 bg-white border-r border-gray-200 h-screen overflow-y-auto ${isMobile? 'hidden' : 'block'}`}>
+    <nav className={`w-72 px-2 bg-white border-r border-gray-200 h-screen  ${isMobile? 'hidden' : 'block'}`}>
       <div className="list-group list-group-flush mx-3 mt-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <a href="/"><img src="/logo.png" alt="Articuverse" /></a>
@@ -46,7 +46,7 @@ const Sidebar = () => {
             href={item.path}
             className={`list-group-item list-group-item-action py-2 ${currentPath === item.path ? "active" : ""}`}
             key={index}
-            onClick={closeMobileMenu} // Close mobile menu on item click
+            onClick={closeMobileMenu} 
           >
             <div className="flex mx-2">
               <div className="mr-2">{item.icon}</div>

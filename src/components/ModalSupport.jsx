@@ -7,6 +7,7 @@ import {
   FaTwitter,
   FaWhatsapp,
   FaWhatsappSquare,
+  FaFacebook,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
@@ -92,10 +93,10 @@ const SupportModal = ({ onClose, artwork }) => {
           <div className="box w-full">
             <div
               className="rectangle border-dashed border-2 border-gray-700 m-3 rounded-lg flex items-center justify-center"
-              style={{ width: 700, height: 350 }}
+              style={{ width: 700, height: 370 }}
             >
-              <div className="flex flex-col items-center my-10 mx-24">
-                <h4 className="text-xl mb-5">
+              <div className="flex flex-col items-center my-2 mx-24">
+                <h4 className="text-xl mb-2">
                   Support{" "}
                   <span className="text-red-400 font-bold">
                     @{artwork.user_username}
@@ -103,7 +104,7 @@ const SupportModal = ({ onClose, artwork }) => {
                   with an additional contribution
                 </h4>
                 <div className="flex text-center font-roboto text-24px">
-                  <h6 className="mt-3 mr-2 font-bold">Amount:</h6>
+                  <h6 className="mt-2 mr-2 font-bold">Amount:</h6>
                   <input
                     type="text"
                     placeholder="Enter commission amount"
@@ -114,7 +115,7 @@ const SupportModal = ({ onClose, artwork }) => {
                   />
                 </div>
                 {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                <div className="text-center font-roboto   mt-5">
+                <div className="text-center font-roboto   mt-3">
                   <h6 className="mr-2 font-bold">Payment Method:</h6>
                   <input
                     type="radio"
@@ -145,6 +146,27 @@ const SupportModal = ({ onClose, artwork }) => {
                   >
                     Support
                   </Button>
+                </div>
+                <div className="text-center font-roboto text-sm mt-10">
+                  Or contribute with share this artwork to help @{artwork.user_username}:
+                </div>
+                <div className=" flex text-center justify-between font-roboto text-2xl  pb-3">
+                  <div className="mx-2">
+                  <FaWhatsapp /> 
+                  </div>
+                  <div className="mx-2">
+                  <FaInstagram />
+                  </div>
+                  <div className="mx-2">
+                  <FaFacebook /> 
+                  </div>
+                  <div className="mx-2">
+                  <FaTwitter />
+                  </div>
+                  <div className="mx-2">
+                  <FaLink />
+                  </div>
+                  
                 </div>
               </div>
             </div>

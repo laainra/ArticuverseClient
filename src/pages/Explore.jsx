@@ -128,7 +128,7 @@ const Explore = () => {
       const response = await axios.get("http://localhost:8080/artwork");
       if (Array.isArray(response.data.data)) {
         setArtData(response.data.data);
-        console.log(response.data.data);
+        console.log("artworks",response.data.data);
       } else {
         console.error("Response data is not an array:", response.data.data);
       }

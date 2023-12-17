@@ -13,14 +13,17 @@ import {
 } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 
 export default function EditProfile() {
+  const IsMobile = useMediaQuery({ maxWidth: 767 }); 
   const nav = new useNavigate();
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
   const [avatar, setAvatar] = useState("");
   const [email, setEmail] = useState("");
+  const [bank_acc, setBankAcc] = useState("");
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState({});
 
@@ -44,6 +47,7 @@ export default function EditProfile() {
           setDescription(data.user.description || "");
           setEmail(data.user.email || "");
           setPassword(data.user.password || "");
+          setBankAcc(data.user.bank_acc || "");
         } else {
           console.error("Error fetching user data:", response.statusText);
         }
@@ -59,6 +63,14 @@ export default function EditProfile() {
     setAvatar(e.target.files[0]);
   };
 
+  const avatarSource =
+  avatar || userData.avatar
+    ? avatar
+      ? URL.createObjectURL(avatar)
+      : `http://localhost:8080/uploads/${userData.avatar}`
+    : "/image/profile.jpg";
+
+
 // ...
 const handleUpdateProfile = async (event) => {
   event.preventDefault();
@@ -72,6 +84,8 @@ const handleUpdateProfile = async (event) => {
   formData.append("email", email);
   formData.append("password", password);
   formData.append("user_id", user_id);
+  formData.append("bank_acc", bank_acc);
+  
 
   try {
     const response = await axios.post(
@@ -87,8 +101,8 @@ const handleUpdateProfile = async (event) => {
 
     if (response.status === 200) {
       console.log("response", response);
-      alert("Data berhasil diubah");
-      nav("/profile");
+      // alert("Data berhasil diubah");
+      window.location.replace("http://localhost:3000/profile");
     } else {
       alert("Failed to update data");
     }
@@ -107,13 +121,14 @@ console.log("userData:", userData);
         <MDBRow>
           <MDBCol col="8" md="4" className="text-center items-center">
             <img
-              src={
-                userData.avatar != null
-                  ? `http://localhost:8080/uploads/${userData.avatar}`
-                  : "/image/profile.jpg"
+              src={avatarSource
               }
               alt="Avatar"
-              className="w-32 h-32 rounded-circle ml-60 mt-40 object-cover"
+              className={
+                IsMobile
+                  ? " mt-3 w-40 ml-28 h-40 object-cover rounded-full"
+                  : "w-80 h-80 ml-40 mt-32 mr-60 object-cover rounded-full"
+              }
             />
 
             <MDBBtn
@@ -122,7 +137,7 @@ console.log("userData:", userData);
               rounded
               size="xl"
               htmlFor="avatarFile"
-              className="ml-40 mt-3"
+              className={IsMobile ? "mt-3" : "ml-44 mt-3"}
             >
               Change
               <input
@@ -132,6 +147,7 @@ console.log("userData:", userData);
                 id="avatarFile"
                 style={{ display: "none" }}
                 accept=".jpg, .jpeg, .png"
+
              
               />
             </MDBBtn>
@@ -208,6 +224,18 @@ console.log("userData:", userData);
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+            <h6 className="text-bold">Bank Account (Format: Account Number(Bank Name)) </h6>
+            <MDBInput
+              
+              wrapperClass="mb-4"
+              id="formControlLg"
+              type="text"
+              size="lg"
+              // defaultValue={userData.email}
+
+              value={bank_acc}
+              onChange={(e) => setBankAcc(e.target.value)}
+            />
             <h6 className="text-bold">Password</h6>
             <MDBInput
               
@@ -216,17 +244,23 @@ console.log("userData:", userData);
               type="password"
               size="lg"
               // defaultValue={userData.email}
-
+              required
+              placeholder="Enter your password for confirmation"
+              label={
+                <span>
+                  <i className="fas fa-envelope mr-2"></i> Enter your password for confirmation
+                </span>
+              }
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            <div className=" ml-32 flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2">
+            <div className={IsMobile ?  "ml-20 mt-3" : "ml-32 flex-column flex-md-row align-items-center text-center text-md-start mt-4 pt-2"} >
               <Button
                 name="Update"
                 title="Update"
                 onClick={handleUpdateProfile}
-                className="mb-2 mb-md-0 px-5 ml-5 "
+                className={IsMobile ? "mt-3" : "ml-44 mt-3"}
                 size="lg"
               />
             </div>

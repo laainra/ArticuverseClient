@@ -20,8 +20,11 @@ import axios from "axios";
 import EditArtwork from "./EditArtwork.jsx";
 import { Modal, Form, Button } from "react-bootstrap";
 import Comment from "../components/CommentCard.jsx";
+import { useMediaQuery } from "react-responsive";
 
 const ArtworkModal = ({ artwork, onClose, onEditClick }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 }); 
+
   const [showModal, setShowModal] = useState(true);
   const [artworkData, setArtworkData] = useState([]);
   const [comments, setComments] = useState([]);
@@ -321,10 +324,10 @@ const ArtworkModal = ({ artwork, onClose, onEditClick }) => {
         </Modal.Footer>
       </Modal>
       <div
-        className="bg-white rounded-lg overflow-y-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4"
-        style={{ width: 800, height: 500 }}
-      >
-        <div className="flex justify-between items-center">
+          className="bg-white rounded-lg overflow-y-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4"
+          style={{ width: isMobile ? "100%" : 800, height: isMobile ? "100%" : 500 }}
+        >
+          <div className={`flex justify-between items-center ${isMobile ? "flex-col-reverse mt-3" : "flex-row"}`}>
           <div className="text-xl font-bold text-center">Detail Artwork</div>
           <div className="cursor-pointer" onClick={handleClose}>
             <svg
@@ -349,7 +352,7 @@ const ArtworkModal = ({ artwork, onClose, onEditClick }) => {
               <img
                 src={`http://localhost:8080/uploads/${artwork.media}`}
                 alt={artwork.title}
-                className="w-80 h-80 mr-60 object-cover"
+                className="w-80 h-80 mr-60 object-cover mb-3"
               />
             </MDBCol>
             <MDBCol className="text-center">
@@ -358,7 +361,7 @@ const ArtworkModal = ({ artwork, onClose, onEditClick }) => {
               <p className="  text-left mb-4">{artwork.description}</p>
               <div className="flex  mb-2">
                 <Avatar
-                  src={artwork.user_avatar}
+                  src={`http://localhost:8080/uploads/${artwork.user_avatar}`}
                   alt={artwork.user_name}
                   sx={{ width: 27, height: 27, borderRadius: "50%", marginRight:"20px" }}
                 />

@@ -49,7 +49,7 @@ const AvatarDropdown = () => {
   const handleLogoutClick = () => {
     // Handle logout, e.g., clear local storage and redirect to the login page
     localStorage.removeItem("token");
-    window.location.replace("http://localhost:3000/login")
+    navigate("/login")
 // Use navigate instead of history.push
   };
 
@@ -76,9 +76,23 @@ const AvatarDropdown = () => {
 
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleProfileClick}>
-                Profile
+                <div className="flex">
+                <img
+                  className="w-5 h-5 rounded-full mr-1 object-cover"
+                  alt="Ellipse"
+                  src={
+                    userData.avatar != null
+                      ? `http://localhost:8080/uploads/${userData.avatar}`
+                      : "/image/profile.jpg"
+                  }
+                />
+                @{userData.username}
+                </div>
+
+                      
+                
               </Dropdown.Item>
-              <Dropdown.Item onClick={handleLogoutClick}>Logout</Dropdown.Item>
+              <Dropdown.Item className="bg-red-50" onClick={handleLogoutClick}>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>

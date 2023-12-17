@@ -58,8 +58,6 @@ function MaterialTable() {
     }
   };
   useEffect(() => {
-
-
     fetchMaterialData();
     fetchCategories();
   }, []);
@@ -92,22 +90,23 @@ function MaterialTable() {
       alert("An error occurred while submitting data");
     }
   };
-
+  console.log([title, description, path, category]);
   const InsertDataMaterial = async (event) => {
     event.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("path", path);
+      formData.append("category", category);
+
       const response = await axios.post(
         "http://localhost:8080/insert-material",
-        {
-          title,
-          description,
-          path,
-          category,
-        }
+        { title, description, path, category }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         alert("Data berhasil ditambahkan");
         closeModal();
         fetchMaterialData();
@@ -188,9 +187,9 @@ function MaterialTable() {
 
   return (
     <div className="container flex">
-      <Sidebar />
       <div className="flex">
-        <div className=" p-5">
+        <Sidebar />
+        <div className=" p-5 justify-end">
           <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
               <Modal.Title>Are you sure to delete this data?</Modal.Title>
@@ -231,7 +230,7 @@ function MaterialTable() {
               <Modal.Title>Form Insert Data</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form onSubmit={InsertDataMaterial} encType="multipart/form-data">
+              <Form onSubmit={InsertDataMaterial}>
                 <Form.Group
                   className="mb-3"
                   controlId="exampleForm.ControlInput1"
@@ -251,7 +250,6 @@ function MaterialTable() {
                   <Form.Label>Description</Form.Label>
                   <Form.Control
                     type="text"
-                    
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                   />
@@ -287,7 +285,6 @@ function MaterialTable() {
                     // onChange={handleFileChange}
                     onChange={(e) => setPath(e.target.value)}
                     placeholder=""
-                    
                   />
                 </Form.Group>
                 <Button type="submit" color="primary" className="px-4 mt-2">
@@ -326,7 +323,6 @@ function MaterialTable() {
                   <Form.Label></Form.Label>
                   <Form.Control
                     type="text"
-                   
                     onChange={(e) => setDescription(e.target.value)}
                     value={description}
                   />
@@ -335,7 +331,7 @@ function MaterialTable() {
                   <Form.Label>Category</Form.Label>
                   <Form.Control
                     as="select"
-                    onChange={(e) => setSelectedCategory([e.target.value])}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
                     value={category}
                   >
                     <option value="" disabled>
@@ -362,7 +358,6 @@ function MaterialTable() {
                     onChange={(e) => setPath(e.target.value)}
                     // accept=".jpg, .jpeg, .png"
                     type="text"
-                    
                     value={path}
                   />
                 </Form.Group>
@@ -411,6 +406,9 @@ function MaterialTable() {
                     <CTableDataCell className="text-center">
                       <strong>Category</strong>
                     </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <strong>Action</strong>
+                    </CTableDataCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -422,13 +420,21 @@ function MaterialTable() {
                       <CTableDataCell className="text-center">
                         {material.title}
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">
+                      <CTableDataCell
+                        className="text-center"
+                        style={{
+                          maxWidth: "20rem",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
                         {material.description}
                       </CTableDataCell>
+
                       <CTableDataCell className="text-center">
                         <iframe
-                          width="360"
-                          height="240"
+                          width="144"
+                          height="96"
                           src={`https://www.youtube.com/embed/${material.path}`}
                           title="YouTube video player"
                           frameBorder="0"

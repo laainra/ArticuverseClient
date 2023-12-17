@@ -89,42 +89,28 @@ function ArtworkTable() {
     event.preventDefault();
     const user_id = localStorage.getItem("userId");
 
-    const formData = new FormData();
-    formData.append("title", title); // Use the state variable directly
-    formData.append("description", description); // Use the state variable directly
-    // formData.append("media", media);
-    formData.append("artist", artist); // Use the state variable directly
-    formData.append("creation_year", creation_year); // Use the state variable directly
-    formData.append("genre", genre); // Use the state variable directly
-    formData.append("user_id", user_id);
 
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0] + ": " + pair[1]);
-    // }
-  
     try {
-      const response = await axios.put(
-        `http://localhost:8080/update-artwork/${id}`,
-        {title,description,media,artist,creation_year,genre,user_id},
+        const response = await axios.put(
+            `http://localhost:8080/update-artwork/${id}`,
+            {title,description,genre,artist,creation_year,user_id}
+,
+        );
 
-        
-      );
-
-      
-
-      if (response.status === 200) {
-        console.log("response",response)
-        alert("Data berhasil diubah");
-        closeModal(); // Close the modal instead of reloading the window
-        fetchArtworkData(); // Fetch updated data
-      } else {
-        alert("Failed to update data");
-      }
+        if (response.status === 200) {
+            console.log("response", response.data);
+            alert("Data berhasil diubah");
+            closeModal(); // Close the modal instead of reloading the window
+            fetchArtworkData(); // Fetch updated data
+        } else {
+            alert("Failed to update data");
+        }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while submitting data");
+        console.error(error);
+        alert("An error occurred while submitting data");
     }
-  };
+};
+
 
   const InsertDataArtwork = async (event) => {
     event.preventDefault();
@@ -236,6 +222,14 @@ function ArtworkTable() {
     setShowDelete(false);
   };
 
+  console.log([          title,
+    description,
+    media,
+    artist,
+    creation_year,
+    genre,
+    ])
+
   const fetchArtworkData = async () => {
     try {
       const response = await axios.get("http://localhost:8080/artwork");
@@ -254,8 +248,9 @@ function ArtworkTable() {
   console.log("genres:", genres);
   return (
     <div className="container flex">
-      <Sidebar />
+      
       <div className="flex">
+      <Sidebar />
         <div className=" p-5">
         <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
@@ -450,7 +445,7 @@ function ArtworkTable() {
                   <Form.Label>genre</Form.Label>
                   <Form.Control
                     as="select"
-                    onChange={(e) => setGenre([e.target.value])}
+                    onChange={(e) => setGenre(e.target.value)}
                     value={genre}
                   >
                     <option value="" disabled>
@@ -493,7 +488,7 @@ function ArtworkTable() {
             </Modal.Footer>
           </Modal>
           <h1 className="py-1">Artwork Data</h1>
-          <CCard className="mb-4 mx-auto">
+          <CCard className="mb-4">
             <CCardHeader>
               <strong>Artwork Table</strong>
             </CCardHeader>
@@ -545,7 +540,7 @@ function ArtworkTable() {
                       <CTableDataCell className="text-center">
                         {artwork.title}
                       </CTableDataCell>
-                      <CTableDataCell className="text-center">
+                      <CTableDataCell className="text-center" style={{ maxWidth: '20rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {artwork.description}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">

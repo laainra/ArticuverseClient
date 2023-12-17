@@ -18,7 +18,7 @@ import { Modal, Form, Button } from "react-bootstrap";
 function AdminCommission() {
   const [commData, setCommData] = useState([]);
   const [id, setId] = useState("");
-  const [Name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [amount, setamount] = useState("");
   const [artist, setartist] = useState("");
   const [user, setuser] = useState("");
@@ -44,7 +44,7 @@ function AdminCommission() {
     try {
       const response = await axios.put(`http://localhost:8080/validate-commission/${id}`);
       if (response.status === 200) {
-        alert("Commission validated successfully");
+        
         fetchCommData(); // Refresh the commission data after validation
       } else {
         alert("Failed to validate commission");
@@ -55,22 +55,22 @@ function AdminCommission() {
     }
   };
 
-  const deleteUser = async (event) => {
+  const deteleComm = async (event) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/delete-user/${id}`
+        `http://localhost:8080/delete-commission/${id}`
       );
 
       if (response.status === 200) {
-        alert("User deleted successfully");
+        // alert("commission deleted successfully");
         closeModalDelete();
         fetchCommData()
       } else {
-        alert("Failed to delete user");
+        alert("Failed to delete commission");
       }
     } catch (error) {
-      console.error("An error occurred while deleting user:", error);
-      alert("An error occurred while deleting user");
+      console.error("An error occurred while deleting commission:", error);
+      alert("An error occurred while deleting commission");
     }
   };
 
@@ -80,7 +80,7 @@ function AdminCommission() {
 
   const showModalDelete = (data) => {
     setId(data.id);
-    setName(data.Name);
+    setTitle(data.title);
     setamount(data.amount);
     setstatus(data.status);
     setartist(data.artwork_artist);
@@ -93,15 +93,15 @@ function AdminCommission() {
 
   const closeModalDelete = () => {
     setId("");
-    setName("");
+    setTitle("");
     setamount("");
     setShowDelete(false);
   };
 
   return (
     <div className="container flex">
-      <Sidebar />
       <div className="flex">
+      <Sidebar />
         <div className=" p-5">
                   <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
@@ -113,8 +113,8 @@ function AdminCommission() {
                   <div className="card-body">
                     <h5 className="card-Name">Detail Data</h5>
                     <div className="row">
-                      <p className="col-4 card-text">Name</p>
-                      <p className="col-6 card-text">: {Name}</p>
+                      <p className="col-4 card-text">Title</p>
+                      <p className="col-6 card-text">: {title}</p>
                     </div>
                     <div className="row">
                       <p className="col-4 card-text">amount</p>
@@ -129,7 +129,7 @@ function AdminCommission() {
                 type="submit"
                 color="primary"
                 className="px-4"
-                onClick={() => deleteUser(id)}
+                onClick={() => deteleComm(id)}
               >
                 Hapus Data
               </Button>
@@ -163,10 +163,16 @@ function AdminCommission() {
                       <strong>Amount</strong>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
+                      <strong>Method</strong>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
                       <strong>User</strong>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
                       <strong>Date</strong>
+                    </CTableDataCell>
+                    <CTableDataCell className="text-center">
+                      <strong>Proof</strong>
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
                       <strong>Status</strong>
@@ -189,13 +195,25 @@ function AdminCommission() {
                         {comm.artist}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        {comm.amount}
+                      {formatCurrency(comm.amount)}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        {comm.user_name}
+                        {comm.method}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                        {comm.user_username}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         {comm.created_at}
+                      </CTableDataCell>
+                      <CTableDataCell className="text-center">
+                      <img
+                          src={`http://localhost:8080/uploads/${comm.proof}`}
+                          alt={comm.proof}
+                          width="300px"
+                          height="200px"
+                        />
+                        
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         {comm.status}
@@ -231,3 +249,13 @@ function AdminCommission() {
 }
 
 export default AdminCommission;
+
+const formatCurrency = (amount) => {
+  const formatter = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
+
+  return formatter.format(amount);
+};

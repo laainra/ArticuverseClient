@@ -5,6 +5,12 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from 'react-bootstrap';
+import {
+  MDBContainer,
+  MDBCol,
+  MDBRow,
+  MDBBtn,
+} from "mdb-react-ui-kit";
 
 
 export default function Payment() {
@@ -17,6 +23,19 @@ export default function Payment() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [paymentCode, setPaymentCode] = useState(generateRandomCode());
+
+  const getPaymentInstructions = () => {
+    if (method === 'ShopeePay') {
+      return 'Transfer in this Shopee Number: 081239640530';
+    } else if (method === 'GoPay') {
+      return 'Transfer in this Gopay Number: 081239640530';
+    } else if (method === 'BankTransfer') {
+      return 'Transfer in this Bank Account Number: 388601037851536 (BRI)';
+    } else {
+      return 'Payment instructions not available for this method.';
+    }
+  };
+  
 
   const handleModalClose = () => {
     setShowModal(false);
@@ -89,6 +108,13 @@ export default function Payment() {
 
         {/* Display user, artwork, amount, method details */}
         <div className="flex flex-col items-center mb-5 mx-auto">
+        <img
+                          src={`http://localhost:8080/uploads/${artworkData.media}`}
+                          alt={artworkData.title}
+                          width="300px"
+                          height="200px"
+                          className="mb-3"
+                        />
           <DetailItem label="Artwork" value={artworkData.title} />
           <DetailItem label="Artist" value={artworkData.artist} />
           <DetailItem label="Owner" value={artworkData.user_username} />
@@ -96,23 +122,38 @@ export default function Payment() {
           <DetailItem label="Method" value={method} />
 
           <div className="border p-3 mt-5 bg-pink-50">
-            <h4 className="">Payment Code:</h4>
-            <h5 className="font-bold">{paymentCode}</h5>
+          <h4 className="font-bold">Payment Instructions:</h4>
+            <h5>{getPaymentInstructions()}</h5>
           </div>
 
           {/* Input for uploading payment proof */}
-          <div className="mt-5">
-            <label htmlFor="paymentProof" className="form-label">
+          <div className="my-5 flex-col">
+            <label htmlFor="paymentProof" className="form-label font-bold">
               Upload Payment Proof
             </label>
-            <input
-              type="file"
-              className="form-control"
-              id="paymentProof"
-              name="proof"
-              onChange={handleFileChange}
-            />
+            <MDBBtn
+              tag="label"
+              color="danger"
+              rounded
+              size="xl"
+              htmlFor="proofFile"
+              className=" mt-3 ml-5"
+            >
+              Select File
+              <input
+                type="file"
+                onChange={handleFileChange}
+                id="proofFile"
+                style={{ display: "none" }}
+                accept=".jpg, .jpeg, .png"
+             
+              />
+            </MDBBtn>
           </div>
+
+            <h5 className="text-sm ml-44 mt-2 text-red-500">
+              {paymentProof ? `Selected avatar: ${paymentProof.name}` : ""}
+            </h5>
 
           {uploadError && <p className="text-red-500 mt-3">{uploadError}</p>}
 
@@ -135,6 +176,7 @@ export default function Payment() {
               className="success-image"
             />
             <p>Payment submitted successfully!</p>
+            <p>Your support will be immediately validated and sent to the artist!</p>
           </div>
         </div>
       )}
@@ -143,6 +185,7 @@ export default function Payment() {
     </div>
   );
 }
+
 
 // Helper component for displaying label and value
 const DetailItem = ({ label, value }) => (
@@ -198,6 +241,7 @@ const PaymentSuccess = () => {
               className="success-image"
             />
           <p>Payment submitted successfully!</p>
+          <p>Your support will be immediately validated and sent to the artist!</p>
           <button className="btn btn-danger mt-3" onClick={() => navigate("/explore")}>
             Explore
           </button>
@@ -211,5 +255,5 @@ const PaymentSuccess = () => {
         };
 
         
-
 export {Payment,PaymentSuccess}
+

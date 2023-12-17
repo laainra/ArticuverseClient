@@ -155,7 +155,7 @@ getLikesByArtwork();
 
             <Box display="flex" alignItems="center" mt={1}>
               <Avatar
-                src={artwork.user_avatar}
+                src={`http://localhost:8080/uploads/${artwork.user_avatar}`}
                 alt={artwork.user_name}
                 sx={{ width: 27, height: 27, borderRadius: '50%' }}
               />

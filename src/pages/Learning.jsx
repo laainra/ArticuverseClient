@@ -3,10 +3,13 @@ import Navi from "../components/General/Navbar.jsx";
 import { MiniButton } from '../components/General/Button.jsx';
 import axios from "axios";
 import { useParams } from 'react-router-dom';
+import { useMediaQuery } from "react-responsive";
 
 const MaterialDetail = () => {
+  const isMobile = useMediaQuery({ maxWidth: 767 }); 
+
   useEffect(() => {
-    document.title = `${materialData.title} | Articuverse`; 
+    document.title = `Learning| Articuverse`; 
     return () => {
 
       document.title = 'Articuverse';
@@ -37,11 +40,11 @@ const MaterialDetail = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <div className="h-screen flex flex-col items-center justify-center mt-16">
-          <h1 className="text-4xl font-bold my-4">{materialData.title}</h1>
+        <div className={`h-screen flex flex-col items-center justify-center ${isMobile? "":"mt-16"}`} >
+          <h1 className={isMobile ? "text-lg font-bold  text-center" : "text-center text-4xl font-bold  mt-14"}>{materialData.title}</h1>
           <iframe
-            width="1280"
-            height="800"
+            width={isMobile ? "360" : "1280"}
+            height={isMobile ? "240" : "800"}
             src={`https://www.youtube.com/embed/${materialData.path}`}
             title={materialData.title}
             frameBorder="0"
@@ -52,7 +55,7 @@ const MaterialDetail = () => {
 
         </div>
       )}
-      <div className="px-12">                <h2 className="text-2xl font-bold mt-4 text-left">Description</h2>
+      <div className="px-12">                <h2 className="text-2xl font-bold  text-left">Description</h2>
             <p className="text-left">{materialData.description}</p></div>
 
     </div>

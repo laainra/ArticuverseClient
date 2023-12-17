@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import Navi from "../components/General/Navbar.jsx";
 import { Button } from "../components/General/Button.jsx";
 import {
@@ -7,16 +7,15 @@ import {
   MDBCol,
   MDBRow,
   MDBBtn,
-  MDBIcon,
   MDBInput,
-  MDBCheckbox,
 } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";
-import { Link, useLocation } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import ArtworkModal from "../pages/ArtworkModal.jsx";
-import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function UploadArtwork() {
+  const IsMobile = useMediaQuery({ maxWidth: 767 });
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -28,15 +27,14 @@ export default function UploadArtwork() {
   const [genres, setGenres] = useState([]);
   const [genre, setGenre] = useState("");
   const [creation_year, setCreationYear] = useState("");
-
   const [userData, setUserData] = useState({});
-  const [user, setUser] = useState({});
 
   console.log(localStorage.getItem("userId"));
 
   const handleFileChange = (e) => {
     setMedia(e.target.files[0]);
   };
+
   const fetchUserData = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/user`, {
@@ -46,10 +44,9 @@ export default function UploadArtwork() {
       });
 
       if (response.status === 200) {
-        // Use response.data instead of response.json()
         const data = response.data;
         console.log("User Data:", data);
-        setUserData(data.user); // Assuming your user data is nested under 'user' key
+        setUserData(data.user);
       } else {
         console.error("Error fetching user data:", response.statusText);
       }
@@ -71,35 +68,43 @@ export default function UploadArtwork() {
       console.error("Error fetching genres:", error);
     }
   };
+
   useEffect(() => {
     fetchGenres();
     fetchUserData();
   }, []);
 
+  const mediaSource =
+    media || userData.media
+      ? media
+        ? URL.createObjectURL(media)
+        : `http://localhost:8080/uploads/${artworkData.media}`
+      : "/image/art1.jpg";
+
   const handleUpload = async (event) => {
     event.preventDefault();
     const user_id = localStorage.getItem("userId");
-    
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("media", media); // assuming media is a File object
+    formData.append("media", media);
     formData.append("artist", artist);
     formData.append("creation_year", creation_year);
     formData.append("genre", genre);
     formData.append("user_id", user_id);
-  
+
     try {
       const response = await axios.post(
         "http://localhost:8080/insert-artwork",
-        formData, // Pass FormData directly as the data
+        formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Set Content-Type to multipart/form-data
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-  
+
       if (response.status === 201) {
         alert("Upload New Artwork Successfully!");
         window.location.replace("localhost:3000/profile");
@@ -111,10 +116,9 @@ export default function UploadArtwork() {
       alert("An error occurred while submitting data");
     }
   };
-  
 
   const closeModal = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false);
   };
 
   return (
@@ -127,9 +131,13 @@ export default function UploadArtwork() {
         <MDBRow>
           <MDBCol col="8" md="4" className="text-center items-center">
             <img
-              src="/image/up_img.png"
+              src={mediaSource}
               alt="Art Upload"
-              className="w-80 h-80 ml-40 mt-32 mr-60 object-cover"
+              className={
+                IsMobile
+                  ? "mb-3 mt-3 w-40 ml-28 h-40 object-cover"
+                  : "w-80 h-80 ml-40 mt-32 mr-60 object-cover"
+              }
             />
             <MDBBtn
               tag="label"
@@ -137,7 +145,7 @@ export default function UploadArtwork() {
               rounded
               size="xl"
               htmlFor="artworkFile"
-              className="ml-44 mt-3"
+              className={IsMobile ? "mt-3" : "ml-44 mt-3"}
             >
               Upload Artwork
               <input
@@ -254,74 +262,6 @@ export default function UploadArtwork() {
           </MDBCol>
         </MDBRow>
       </MDBContainer>
-      {/* <Container className="mt-4"> */}
-      {/* <Row> */}
-      {/* Left Column */}
-      {/* <Col md={4}>
-            <div className="text-center">
-              <img
-                src="/path-to-your-avatar-image.jpg"
-                alt="Avatar"
-                className="w-32 h-32 rounded-circle"
-              />
-            </div>
-            <Form.Group className="mt-3">
-              <Form.File
-                id="avatarFile"
-                label="Upload Avatar"
-                custom
-                className="text-white bg-red-600 rounded"
-              />
-            </Form.Group>
-          </Col> */}
-
-      {/* Right Column */}
-      {/* <Col md={8}>
-            <Form>
-              <Form.Group controlId="formName">
-                <Form.Label className="text-red-600">
-                  Title<span className="text-red-600">*</span>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Add your title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formUsername">
-                <Form.Label>Artist</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Your Artist"
-                  value={genre}
-                  onChange={(e) => setGenre(e.target.value)}
-                  disabled
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Form.Group controlId="formDescription">
-                <Form.Label className="text-red-600">
-                  Description<span className="text-red-600">*</span>
-                </Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  placeholder="Add your description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="bg-red-100 rounded"
-                />
-              </Form.Group>
-
-              <Button title="Update" onClick={handleUpload}/>
-            </Form>
-          </Col> */}
-      {/* </Row> */}
-      {/* </Container> */}
     </div>
   );
 }

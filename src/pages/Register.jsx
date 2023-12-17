@@ -23,12 +23,14 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import "../App.css";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const nav = new  useNavigate();
 
 
   const handleFormSubmit = async (e) => {
@@ -47,7 +49,7 @@ function Register() {
 
         if (response.status === 200) {
           alert("Register Successful");
-          window.location.replace('http://localhost:3000/login');
+          nav('/login');
         } else {
           alert("Failed to register");
         }

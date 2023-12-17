@@ -4,8 +4,9 @@ import { Link, useLocation } from "react-router-dom";
 import { MiniButton } from "./Button";
 import styled from "styled-components";
 import AvatarDropdown from "../AvatarDropdown";
-import { FaPlus } from "react-icons/fa";
+import { FaBell, FaPlus } from "react-icons/fa";
 import UploadArtworkModal from "../ModalArtwork";
+import { Dropdown } from "react-bootstrap";
 import { isAuthenticated } from '../../Auth/AuthHelper.js';
 
 function Navi() {
@@ -132,9 +133,25 @@ function Navi() {
             </Nav>
 
             {isAuthenticated() ? (
-              <div className="flex items-center h-12 mt-2">
+              <div className="flex items-center h-12 mt-2  ml-5 bg-transparent ">
+                                  <Dropdown className=" bg-transparent border-none shadow-none">
+          <Dropdown.Toggle id="custom-dropdown-toggle" className=" bg-transparent border-none shadow-none">
+          <div className="rounded-full w-8 h-8 bg-transparentflex items-center justify-center mt-2">
+              <FaBell className="text-black text-2xl p"/>
+              </div>
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item >
+                Someone loved your art
+              </Dropdown.Item>
+              <Dropdown.Item >Someone saved your art</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
                 <div className="w-12 h-12 items-center">
+                  
                   <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
+
                     <FaPlus
                       className="text-white text-2xl p-1"
                       onClick={handlePlusIconClick}
