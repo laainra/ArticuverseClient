@@ -10,7 +10,7 @@ const ExhibitionCard = ({ title, location, date, desc, img, onClick }) => {
       <CardMedia
         component="img"
         height="278"
-        image={`/image/${img}`} 
+        image={img} 
         alt="Exhibition Image"
         sx={{ objectFit: 'cover', height: '278px' }}
       />
@@ -28,12 +28,12 @@ const ExhibitionCard = ({ title, location, date, desc, img, onClick }) => {
             Date: {date}
           </Typography>
         </Box>
-        <Box display="flex" alignItems="center" mt={1}>
+        {/* <Box display="flex" alignItems="center" mt={1}>
           <DateRangeIcon sx={{ fontSize: 20 }} />
           <Typography variant="body2">
             Description: {desc}
           </Typography>
-        </Box>
+        </Box> */}
       </CardContent>
     </Card>
   );

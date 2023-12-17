@@ -11,14 +11,12 @@ import { MiniButton } from "../components/General/Button";
 import { Avatar } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
 
-
 export default function Exhibition() {
-  const isMobile = useMediaQuery({ maxWidth: 767 }); 
+  const isMobile = useMediaQuery({ maxWidth: 767 });
   useEffect(() => {
-    document.title = 'Exhibition | Articuverse'; 
+    document.title = "Exhibition | Articuverse";
     return () => {
-
-      document.title = 'Articuverse';
+      document.title = "Articuverse";
     };
   }, []);
   const [exhibitionData, setExhibitionData] = useState([]);
@@ -27,7 +25,6 @@ export default function Exhibition() {
   const openExhibitionModal = (exhibition) => {
     setSelectedExhibition(exhibition);
   };
-  
 
   const closeExhibitionModal = () => {
     setSelectedExhibition(null);
@@ -37,7 +34,7 @@ export default function Exhibition() {
 
   const formatDate = (dateString) => {
     const [year, month, day] = dateString.split("-");
-    return new Date(year, month - 1, day); 
+    return new Date(year, month - 1, day);
   };
 
   const PastExhibitions = ({ exhibitionData }) => {
@@ -80,14 +77,14 @@ export default function Exhibition() {
 
   const ExhibitionModal = ({ exhibition, onClose }) => {
     const [showModal, setShowModal] = useState(true);
-  
+
     const handleClose = () => {
       setShowModal(false);
       if (onClose) {
         onClose();
       }
     };
-  
+
     const getDayOfWeek = (dateString) => {
       const daysOfWeek = [
         "Sunday",
@@ -102,14 +99,21 @@ export default function Exhibition() {
       const dayOfWeek = daysOfWeek[date.getDay()];
       return dayOfWeek;
     };
-  
+
     return (
       <div className="mt-10 fixed top-0 left-0 w-screen h-screen bg-gray-800 bg-opacity-75 z-50">
         <div
           className="bg-white rounded-lg overflow-y-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4"
-          style={{ width: isMobile ? "100%" : 800, height: isMobile ? "100%" : 500 }}
+          style={{
+            width: isMobile ? "100%" : 800,
+            height: isMobile ? "100%" : 500,
+          }}
         >
-          <div className={`flex justify-between items-center ${isMobile ? "mt-5" : ""}`}>
+          <div
+            className={`flex justify-between items-center ${
+              isMobile ? "mt-5" : ""
+            }`}
+          >
             <div className="text-xl font-bold text-center">
               Detail Exhibition
             </div>
@@ -131,42 +135,40 @@ export default function Exhibition() {
             </div>
           </div>
           <div className="box w-full p-4">
-  <MDBRow className="flex flex-col-reverse sm:flex-row">
-    <MDBCol className="text-center mb-4 sm:order-2">
-      <img
-        src={"/image/" + exhibition.poster}
-        alt={exhibition.name}
-        className="w-80 h-80 mx-auto object-cover"
-      />
-    </MDBCol>
-    <MDBCol className="text-center sm:order-1">
-      <h1 className="text-xl font-bold text-left mb-4">
-        {exhibition.name}
-      </h1>
-      <p className="text-left mb-4">
-        <span className="font-bold"> Location: </span>
-        {exhibition.location}
-      </p>
-      <p className="text-sm text-left mb-4">{exhibition.description}</p>
-      <p className="text-left mb-4">
-        <span className="font-bold"> Date: </span>
-        {`${getDayOfWeek(
-          exhibition.start_date
-        )}, ${exhibition.start_date}- ${getDayOfWeek(
-          exhibition.end_date
-        )}, ${exhibition.end_date}`}
-      </p>
-    </MDBCol>
-  </MDBRow>
-</div>
-
+            <MDBRow className="flex flex-col-reverse sm:flex-row">
+              <MDBCol className="text-center mb-4 sm:order-2">
+                <img
+                  src={`http://localhost:8080/uploads/${exhibition.poster}`}
+                  alt={exhibition.name}
+                  className="w-80 h-80 mx-auto object-cover"
+                />
+              </MDBCol>
+              <MDBCol className="text-center sm:order-1">
+                <h1 className="text-xl font-bold text-left mb-4">
+                  {exhibition.name}
+                </h1>
+                <p className="text-left mb-4">
+                  <span className="font-bold"> Location: </span>
+                  {exhibition.location}
+                </p>
+                <p className="text-sm text-left mb-4">
+                  {exhibition.description}
+                </p>
+                <p className="text-left mb-4">
+                  <span className="font-bold"> Date: </span>
+                  {`${getDayOfWeek(exhibition.start_date)}, ${
+                    exhibition.start_date
+                  }- ${getDayOfWeek(exhibition.end_date)}, ${
+                    exhibition.end_date
+                  }`}
+                </p>
+              </MDBCol>
+            </MDBRow>
+          </div>
         </div>
       </div>
     );
   };
-  
-
-
 
   return (
     <div className="mt-20 min-h-screen px-2 flex flex-col items-center">
@@ -191,8 +193,8 @@ export default function Exhibition() {
               name={exh.name}
               location={exh.location}
               date={`${exh.start_date}-${exh.end_date}`}
-              desc={exh.description}
-              img={exh.poster}
+              // desc={exh.description}
+              img={`http://localhost:8080/uploads/${exh.poster}`}
               onClick={() => openExhibitionModal(exh)}
             />
           </div>
@@ -208,8 +210,8 @@ export default function Exhibition() {
               name={exh.name}
               location={exh.location}
               date={`${exh.start_date}-${exh.end_date}`}
-              desc={exh.description}
-              img={exh.poster}
+              // desc={exh.description}
+              img={`http://localhost:8080/uploads/${exh.poster}`}
               onClick={() => openExhibitionModal(exh)}
             />
           </div>
@@ -225,8 +227,8 @@ export default function Exhibition() {
               name={exh.name}
               location={exh.location}
               date={`${exh.start_date}-${exh.end_date}`}
-              desc={exh.description}
-              img={exh.poster}
+              // desc={exh.description}
+              img={`http://localhost:8080/uploads/${exh.poster}`}
               onClick={() => openExhibitionModal(exh)}
             />
           </div>
