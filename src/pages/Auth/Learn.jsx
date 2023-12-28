@@ -71,7 +71,7 @@ export default function Learn() {
       <Navi />
 
       <div className="md:max-w-xl w-full p-3">
-      <SearchBar currentPage="learn" />
+      {/* <SearchBar currentPage="learn" /> */}
       </div>
 
       <h1 className="text-3xl mt-8">Top Materials</h1>

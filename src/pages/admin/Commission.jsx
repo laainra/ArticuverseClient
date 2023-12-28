@@ -42,9 +42,26 @@ function AdminCommission() {
 
   const validateCommission = async (id) => {
     try {
-      const response = await axios.put(`http://localhost:8080/validate-commission/${id}`);
+      const response = await axios.put(
+        `http://localhost:8080/validate-commission/${id}`
+      );
       if (response.status === 200) {
-        
+        fetchCommData(); // Refresh the commission data after validation
+      } else {
+        alert("Failed to validate commission");
+      }
+    } catch (error) {
+      console.error("An error occurred while validating commission:", error);
+      alert("An error occurred while validating commission");
+    }
+  };
+
+  const unvalidateCommission = async (id) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/unvalidate-commission/${id}`
+      );
+      if (response.status === 200) {
         fetchCommData(); // Refresh the commission data after validation
       } else {
         alert("Failed to validate commission");
@@ -64,7 +81,7 @@ function AdminCommission() {
       if (response.status === 200) {
         // alert("commission deleted successfully");
         closeModalDelete();
-        fetchCommData()
+        fetchCommData();
       } else {
         alert("Failed to delete commission");
       }
@@ -75,7 +92,7 @@ function AdminCommission() {
   };
 
   useEffect(() => {
-    fetchCommData()
+    fetchCommData();
   }, []);
 
   const showModalDelete = (data) => {
@@ -86,7 +103,6 @@ function AdminCommission() {
     setartist(data.artwork_artist);
     setuser(data.user_username);
     setdate(data.created_at);
-
 
     setShowDelete(true);
   };
@@ -101,9 +117,9 @@ function AdminCommission() {
   return (
     <div className="container flex">
       <div className="flex">
-      <Sidebar />
+        <Sidebar />
         <div className=" p-5">
-                  <Modal show={showDelete} onHide={closeModalDelete}>
+          <Modal show={showDelete} onHide={closeModalDelete}>
             <Modal.Header closeButton>
               <Modal.Title>Are you sure to delete this data?</Modal.Title>
             </Modal.Header>
@@ -195,7 +211,7 @@ function AdminCommission() {
                         {comm.artist}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                      {formatCurrency(comm.amount)}
+                        {formatCurrency(comm.amount)}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         {comm.method}
@@ -207,28 +223,35 @@ function AdminCommission() {
                         {comm.created_at}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                      <img
+                        <img
                           src={`http://localhost:8080/uploads/${comm.proof}`}
                           alt={comm.proof}
                           width="300px"
                           height="200px"
                         />
-                        
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         {comm.status}
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-
-                <Button
-                className="mb-2"
-                  variant="primary"
-                  onClick={() => validateCommission(comm.id)}
-                >
-                  Validate
-                </Button>
-
-                      <Button
+                        {comm.status === "validated" ? (
+                          <Button
+                            className="mb-2"
+                            variant="primary"
+                            onClick={() => unvalidateCommission(comm.id)}
+                          >
+                            Unvalidate
+                          </Button>
+                        ) : (
+                          <Button
+                            className="mb-2"
+                            variant="primary"
+                            onClick={() => validateCommission(comm.id)}
+                          >
+                            Validate
+                          </Button>
+                        )}
+                        <Button
                           variant="danger"
                           onClick={() => showModalDelete(comm)}
                         >
@@ -236,7 +259,6 @@ function AdminCommission() {
                         </Button>
                       </CTableDataCell>
                     </CTableRow>
-                    
                   ))}
                 </CTableBody>
               </CTable>

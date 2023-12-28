@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import {
-  FaBookmark,
-  FaEdit,
-  FaHeart,
   FaPaperPlane,
-  FaTrash,
 } from "react-icons/fa";
 import { MDBCol, MDBRow } from "mdb-react-ui-kit";
 import "mdb-react-ui-kit/dist/css/mdb.min.css";

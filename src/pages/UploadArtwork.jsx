@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, s } from "react";
 import axios from "axios";
 import Navi from "../components/General/Navbar.jsx";
 import { Button } from "../components/General/Button.jsx";
@@ -28,6 +28,7 @@ export default function UploadArtwork() {
   const [genre, setGenre] = useState("");
   const [creation_year, setCreationYear] = useState("");
   const [userData, setUserData] = useState({});
+  const nav = new  useNavigate();
 
   console.log(localStorage.getItem("userId"));
 
@@ -107,7 +108,7 @@ export default function UploadArtwork() {
 
       if (response.status === 201) {
         alert("Upload New Artwork Successfully!");
-        window.location.replace("localhost:3000/profile");
+        nav("/profile");
       } else {
         alert("Failed to insert data");
       }

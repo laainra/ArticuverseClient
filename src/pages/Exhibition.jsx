@@ -181,7 +181,7 @@ export default function Exhibition() {
       )}
 
       <div className="md:max-w-xl w-full p-3">
-        <SearchBar />
+        {/* <SearchBar /> */}
       </div>
 
       <h1 className="text-3xl mt-8">Current Exhibition</h1>

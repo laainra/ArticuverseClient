@@ -55,6 +55,7 @@ root.render(
       <Route path="exhibition" element={<Exhibition />} />
       <Route path="/material/:id" element={<MaterialDetail />} />
       <Route path="artwork" element={<ArtworkModal />} />
+      <Route path="learn" element={<Learn />} />
       
       {isAdmin() && (
         <>
@@ -71,7 +72,7 @@ root.render(
         <>
           <Route path="profile" element={<Profile />} />
           <Route path="edit-profile" element={<EditProfile />} />
-          <Route path="learn" element={<Learn />} />
+          
 
           <Route path="upload-artwork" element={<UploadArtwork />} />
           <Route path="edit-artwork" element={<UploadArtwork />} />

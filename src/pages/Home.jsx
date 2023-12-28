@@ -77,7 +77,7 @@ function Home() {
         animate="visible"
         variants={fadeInVariants}
       >
-        <Royalties />
+        {/* <Royalties /> */}
       </motion.div>
       <motion.div
         id="museum"

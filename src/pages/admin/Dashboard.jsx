@@ -280,14 +280,14 @@ export default function AdminDashboard() {
           />
         </div>
 
-        <div className={`flex ${isMobile ? "flex-col ml-14" : "space-x-4 ml-14  "} `}>
+        {/* <div className={`flex ${isMobile ? "flex-col ml-14" : "space-x-4 ml-14  "} `}>
           {userChart}
           {artworkChart}
         </div>
         <div className={`flex ${isMobile ? "flex-col ml-14" : " space-x-4 ml-14"} `}>
           {exhibitionChart}
           {materialChart}
-        </div>
+        </div> */}
       </div>
     </div>
   );

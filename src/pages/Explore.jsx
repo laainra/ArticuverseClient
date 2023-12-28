@@ -181,7 +181,7 @@ const Explore = () => {
       <div className="flex mt-3 justify-center">
           <Button to="/artworks-list" title="More Artworks" />
         </div>
-      <h1 className="text-3xl mt-5 text-center">Top Artists</h1>
+      {/* <h1 className="text-3xl mt-5 text-center">Top Artists</h1>
       <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
         {dataArtists.map((artist, index) => (
           <ArtistCard
@@ -192,7 +192,7 @@ const Explore = () => {
             
           />
         ))}
-      </div>
+      </div> */}
 
       <Footer />
     </div>

@@ -7,7 +7,7 @@ import AvatarDropdown from "../AvatarDropdown";
 import { FaBell, FaPlus } from "react-icons/fa";
 import UploadArtworkModal from "../ModalArtwork";
 import { Dropdown } from "react-bootstrap";
-import { isAuthenticated } from '../../Auth/AuthHelper.js';
+import { isAuthenticated } from "../../Auth/AuthHelper.js";
 
 function Navi() {
   const NavLinkStyle = styled(Link)`
@@ -51,7 +51,6 @@ function Navi() {
     return `/${section}`;
   };
 
-
   const handlePlusIconClick = () => {
     setShowModal(true); // Set the state to true when FaPlus is clicked
   };
@@ -63,9 +62,8 @@ function Navi() {
   return (
     <div>
       <Navbar bg="light" expand="lg" expanded={expanded} fixed="top">
-      {showModal && <UploadArtworkModal onClose={closeUploadModal} />}
+        {showModal && <UploadArtworkModal onClose={closeUploadModal} />}
         <Container className="w-full justify-between">
-        
           <div className="flex justify-between items-center">
             <div className="mr-32 2xl:mr-5">
               <Navbar.Brand as={Link} to="/home">
@@ -134,26 +132,25 @@ function Navi() {
 
             {isAuthenticated() ? (
               <div className="flex items-center h-12 mt-2  ml-5 bg-transparent ">
-                                  <Dropdown className=" bg-transparent border-none shadow-none">
-          <Dropdown.Toggle id="custom-dropdown-toggle" className=" bg-transparent border-none shadow-none">
-          <div className="rounded-full w-8 h-8 bg-transparentflex items-center justify-center mt-2">
-              <FaBell className="text-black text-2xl p"/>
-              </div>
-            </Dropdown.Toggle>
+                <Dropdown className=" bg-transparent border-none shadow-none">
+                  <Dropdown.Toggle
+                    id="custom-dropdown-toggle"
+                    className=" bg-transparent border-none shadow-none"
+                  >
+                    <div className="rounded-full w-8 h-8 bg-transparentflex items-center justify-center mt-2">
+                      <FaBell className="text-black text-2xl p" />
+                    </div>
+                  </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item >
-                Someone loved your art
-              </Dropdown.Item>
-              <Dropdown.Item >Someone saved your art</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+                  <Dropdown.Menu>
+                    <Dropdown.Item>Someone loved your art</Dropdown.Item>
+                    <Dropdown.Item>Someone saved your art</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
                 <div className="w-12 h-12 items-center">
-                  
                   <div className="rounded-full w-8 h-8 bg-red-600 flex items-center justify-center">
-
                     <FaPlus
-                      className="text-white text-2xl p-1"
+                      className="text-white text-2xl p-1 cursor-pointer"
                       onClick={handlePlusIconClick}
                     />
                   </div>
@@ -162,14 +159,8 @@ function Navi() {
                 <AvatarDropdown />
               </div>
             ) : (
-              <MiniButton
-                title={getMiniButtonTitle()}
-                to={getMiniButtonTo()}
-              />
+              <MiniButton title={getMiniButtonTitle()} to={getMiniButtonTo()} />
             )}
-
-
-
           </Navbar.Collapse>
         </Container>
       </Navbar>

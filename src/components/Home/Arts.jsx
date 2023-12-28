@@ -103,7 +103,7 @@ function Arts() {
           </div>
         ))}
       <div style={{ textAlign: "center", margin: "20px 0 0 0" }} className="center-button col-span-1">
-        <Button title="More Arts" to="explore" />
+        <Button title="More Arts" to="/explore" />
       </div>
       </div>
       

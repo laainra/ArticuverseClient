@@ -67,6 +67,7 @@ function Hero() {
                 {item.subTitle}
               </p>
               <div className="flex justify-center">
+                
                 <Button title="Join Us Now" to="register" />
               </div>
             </div>
